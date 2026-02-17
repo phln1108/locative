@@ -1,23 +1,94 @@
-export interface Categories {
+export interface OpeningHours {
+  openNow?: boolean;
+  schedule: {
+    day: string;
+    open: string;
+    close: string;
+  }[];
+}
+
+export interface Address {
+  street: string;
+  number: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  zip?: string;
+}
+
+export interface ContactInfo {
+  phone?: string;
+  website?: string;
+  email?: string;
+}
+
+export interface ReviewDetailed {
+  id: number;
+  user: string;
+  avatar?: string;
+  rating: number;
+  comment: string;
+  date: string;
+}
+
+export interface RatingBreakdown {
+  five: number;
+  four: number;
+  three: number;
+  two: number;
+  one: number;
+}
+
+export interface Place {
+  id: number;
+  type: "place" | "service" | "tour";
+  title: string;
+  subtitle?: string;
+  categoryKey: string;
+  description?: string;
+
+  images: string[];
+
+  rating?: number;
+  reviews?: number;
+  ratingBreakdown?: RatingBreakdown;
+  reviewsDetailed?: ReviewDetailed[];
+
+  distance?: string;
+  price?: number;
+  duration?: string;
+
+  address?: Address;
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
+
+  contact?: ContactInfo;
+
+  openingHours?: OpeningHours;
+
+  amenities?: string[];
+
+  social?: {
+    instagram?: string;
+    facebook?: string;
+  };
+
+  badges?: {
     label: string;
-    nearBy: number;
-    emoji: string;
-}
+    variant?: "default" | "secondary" | "destructive";
+  }[];
 
-export interface NearPlace {
-    image: string
-    title: string
-    subtitle: string
-    distance: string
-    rating: number
-}
+  sections?: {
+    title: string;
+    content?: string;
+    items?: string[];
+  }[];
 
-export interface TourPlace {
-    image: string,
-    title: string,
-    price: number,
-    rating: number,
-    reviews: number,
-    duration: string,
-    highlight?: boolean,
+  quickActions?: {
+    type: "call" | "website" | "map" | "share";
+    label: string;
+    value?: string;
+  }[];
 }

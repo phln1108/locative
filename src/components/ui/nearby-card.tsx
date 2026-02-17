@@ -10,6 +10,7 @@ interface NearbyCardProps {
   distance: string;
   rating: number;
   variant?: "carousel" | "grid";
+  onClick?: () => void;
 }
 
 export default function NearbyCard({
@@ -19,9 +20,11 @@ export default function NearbyCard({
   distance,
   rating,
   variant = "carousel",
+  onClick,
 }: NearbyCardProps) {
   return (
     <Card
+      onClick={onClick}
       className={cn(
         "overflow-hidden group cursor-pointer transition-all duration-200 hover:scale-[1.02] p-0",
         variant === "grid"

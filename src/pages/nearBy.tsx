@@ -1,23 +1,15 @@
-import { ArrowLeft, Funnel, MapPin, SlidersHorizontal } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
-import NearbyCard from "@/components/ui/nearby-card"
-import { mockedNearPlaces } from "@/models/mocked"
-
+import { ArrowLeft, Funnel, MapPin, SlidersHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import NearbyCard from "@/components/ui/nearby-card";
+import { getCategoryByKey } from "@/data/categories";
 import { useNavigate } from "react-router-dom";
+import { mockedPlaces } from "@/data/mocked-places";
 
 const NearbyPlacesPage = () => {
   const navigate = useNavigate();
+  const nearbyPlaces = mockedPlaces.filter((place) => place.type !== "tour");
 
   return (
     <div className="space-y-6 pb-20">
@@ -29,19 +21,18 @@ const NearbyPlacesPage = () => {
             </Button>
 
             <div className="flex-1">
-              <h1 className="text-[20px] font-semibold">
-                Lugares próximos
-              </h1>
+              <h1 className="text-[20px] font-semibold">Lugares proximos</h1>
               <p className="text-sm text-muted-foreground">
-                {mockedNearPlaces.length} lugares encontrados
+                {nearbyPlaces.length} lugares encontrados
               </p>
             </div>
           </div>
+
           <div className="flex items-center gap-2 overflow-x-auto pb-2 -mx-6 px-6 scrollbar-hide">
             <Select>
               <SelectTrigger className="w-auto gap-2">
                 <MapPin className="w-4 h-4" />
-                <SelectValue placeholder="Todas distâncias" />
+                <SelectValue placeholder="Todas distancias" />
               </SelectTrigger>
             </Select>
 
@@ -57,7 +48,7 @@ const NearbyPlacesPage = () => {
             <Select>
               <SelectTrigger className="w-auto gap-2">
                 <SlidersHorizontal className="w-4 h-4" />
-                <SelectValue placeholder="Mais próximos" />
+                <SelectValue placeholder="Mais proximos" />
               </SelectTrigger>
             </Select>
           </div>
@@ -65,16 +56,21 @@ const NearbyPlacesPage = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {mockedNearPlaces.map((place) => (
+        {nearbyPlaces.map((place) => (
           <NearbyCard
-            key={place.title}
-            {...place}
+            key={place.id}
+            image={place.images[0]}
+            title={place.title}
+            subtitle={place.subtitle ?? getCategoryByKey(place.categoryKey)?.label ?? ""}
+            distance={place.distance ?? ""}
+            rating={place.rating ?? 0}
             variant="grid"
+            onClick={() => navigate(`/bio/${place.id}`)}
           />
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default NearbyPlacesPage
+export default NearbyPlacesPage;

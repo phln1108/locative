@@ -5,7 +5,7 @@ import {
     TileLayer,
 } from "react-leaflet";
 import { useTheme } from "@/providers/theme-provider";
-import { useEffect, useState } from "react";
+import { useGeolocation } from "@/providers/geolocation-provider";
 import { Loader2 } from "lucide-react";
 import MapControls from "./map-controls";
 import RecenterMap from "./recenter-map";
@@ -13,87 +13,15 @@ import RecenterMap from "./recenter-map";
 import "@/lib/map-icons";
 import SearchBar from "../navigation/search-bar";
 
-const FALLBACK_POSITION: [number, number] = [-3.730451, -38.496286];
-
 export default function Map() {
     const { theme } = useTheme();
-
-    const [userPosition, setUserPosition] =
-        useState<[number, number] | null>(null);
-
-    const [loading, setLoading] = useState(true);
-
-    const getLocation = (): Promise<[number, number]> => {
-        setLoading(true);
-
-        return new Promise((resolve) => {
-            if (!navigator.geolocation) {
-                setUserPosition(FALLBACK_POSITION);
-                setLoading(false);
-                resolve(FALLBACK_POSITION);
-                return;
-            }
-
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    const coords: [number, number] = [
-                        pos.coords.latitude,
-                        pos.coords.longitude,
-                    ];
-
-                    setUserPosition(coords);
-                    setLoading(false);
-                    resolve(coords);
-                },
-                () => {
-                    setUserPosition(FALLBACK_POSITION);
-                    setLoading(false);
-                    resolve(FALLBACK_POSITION);
-                },
-                {
-                    enableHighAccuracy: false,
-                    timeout: 15000,
-                    maximumAge: 60000,
-                }
-            );
-        });
-    };
-
-    useEffect(() => {
-        if (!navigator.geolocation) {
-            const timer = window.setTimeout(() => {
-                setUserPosition(FALLBACK_POSITION);
-                setLoading(false);
-            }, 0);
-
-            return () => window.clearTimeout(timer);
-        }
-
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                const coords: [number, number] = [
-                    pos.coords.latitude,
-                    pos.coords.longitude,
-                ];
-
-                setUserPosition(coords);
-                setLoading(false);
-            },
-            () => {
-                setUserPosition(FALLBACK_POSITION);
-                setLoading(false);
-            },
-            {
-                enableHighAccuracy: false,
-                timeout: 15000,
-                maximumAge: 60000,
-            }
-        );
-    }, []);
+    const { userPosition, position, loading, requestLocation } = useGeolocation();
 
     return (
         <div className="relative h-full w-full">
             <MapContainer
+                center={position}
+                zoom={16}
                 zoomControl={false}
                 className="h-full w-full"
             >
@@ -114,8 +42,8 @@ export default function Map() {
                     }
                 />
 
-                <MapControls getLocation={getLocation} />
-                <RecenterMap position={userPosition ?? FALLBACK_POSITION} />
+                <MapControls getLocation={requestLocation} />
+                <RecenterMap position={position} />
                 {userPosition && (
                     <Marker position={userPosition}>
                         <Popup>

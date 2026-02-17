@@ -22,7 +22,7 @@ export default defineConfig([
     rules: {
       "react-refresh/only-export-components": [
         "error",
-        { allowConstantExport: true, allowExportNames: ["useTheme"] },
+        { allowConstantExport: true, allowExportNames: ["useTheme", "useGeolocation"] },
       ],
     },
   },

@@ -2,7 +2,9 @@ import { Star, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { TourPlace } from "@/models/models";
 
-type TourCardProps = TourPlace;
+type TourCardProps = TourPlace & {
+  onClick?: () => void;
+};
 
 export function TourCard({
   image,
@@ -12,9 +14,13 @@ export function TourCard({
   reviews,
   duration,
   highlight,
+  onClick,
 }: TourCardProps) {
   return (
-    <div className="w-45 shrink-0 cursor-pointer transition-all duration-200 active:scale-[0.96] hover:shadow-md">
+    <div
+      className="w-45 shrink-0 cursor-pointer transition-all duration-200 active:scale-[0.96] hover:shadow-md"
+      onClick={onClick}
+    >
       {/* Image */}
       <div className="relative h-30 overflow-hidden rounded-3xl shadow-sm border-[3px] border-white">
         <img

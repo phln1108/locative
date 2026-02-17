@@ -8,6 +8,8 @@ import MapPage from "./map";
 import NotFound from "./not-found";
 import CategoriesPage from "./categories";
 import NearbyPlacesPage from "./nearBy";
+import ProfilePage from "./profile";
+import BioPage from "./bio";
 
 
 const router = createBrowserRouter([
@@ -26,6 +28,10 @@ const router = createBrowserRouter([
             {
                 path: "nearby",
                 Component: NearbyPlacesPage
+            },
+            {
+                path: "profile",
+                Component: ProfilePage
             },
         ]
     },
@@ -47,8 +53,12 @@ const router = createBrowserRouter([
         Component: MapPage
     },
     {
-        path:"*",
-        Component:NotFound
+        path: "*",
+        Component: NotFound
+    },
+    {
+        path: "bio/:placeId",
+        Component: BioPage
     }
 ]);
 
