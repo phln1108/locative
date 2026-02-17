@@ -2,9 +2,7 @@ import { Star, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { TourPlace } from "@/models/models";
 
-interface TourCardProps extends TourPlace {
-
-};
+type TourCardProps = TourPlace;
 
 export function TourCard({
   image,

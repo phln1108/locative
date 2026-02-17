@@ -5,7 +5,7 @@ import InputPassword from "@/components/forms/inputLogin"
 import OtherLoginButton from "@/components/forms/other-login-button";
 import { Button } from "@/components/ui/button"
 import { Label } from "@radix-ui/react-label"
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const LoginPage = () => {

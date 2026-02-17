@@ -3,7 +3,7 @@ import { Plus, Minus, LocateFixed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface Props {
-    getLocation: () => Promise<[number, number] | undefined>;
+    getLocation: () => Promise<[number, number]>;
 }
 
 export default function MapControls({ getLocation }: Props) {

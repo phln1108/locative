@@ -6,7 +6,7 @@ import { getColorByLabel } from "@/lib/utils";
 import { SectionHeader } from "@/components/ui/section-header";
 import { TourCard } from "@/components/ui/tour-card";
 
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -50,7 +50,7 @@ const HomePage = () => {
                     title="Lugares próximos"
                     description="Descubra serviços e lugares perto de você"
                     actionLabel="Ver mais"
-                    onAction={() => navigate("/nearBy")}
+                    onAction={() => navigate("/nearby")}
                 />
 
                 <div className="relative">

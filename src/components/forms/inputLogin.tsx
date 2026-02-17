@@ -31,12 +31,13 @@ export default function InputLogin({
         <Input
           id={id}
           type={props.type !== "password" || isVisible ? "text" : "password"}
-          placeholder={props.placeholder}
           className="border-0 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+          {...props}
         />
 
         {props.type === "password" && (
           <Button
+            type="button"
             variant="ghost"
             size="icon"
             onClick={() => setIsVisible((prev) => !prev)}

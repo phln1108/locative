@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { ArrowLeft, Ghost } from "lucide-react";
 
 export default function NotFound() {

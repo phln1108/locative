@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
 import { Footer } from "@/components/layout/footer";

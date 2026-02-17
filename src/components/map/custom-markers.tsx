@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import type React from "react";
 import L from "leaflet";
 import { Marker } from "react-leaflet";
 import { renderToStaticMarkup } from "react-dom/server";

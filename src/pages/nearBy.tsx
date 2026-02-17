@@ -14,7 +14,7 @@ import {
 import NearbyCard from "@/components/ui/nearby-card"
 import { mockedNearPlaces } from "@/models/mocked"
 
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const NearbyPlacesPage = () => {
   const navigate = useNavigate();

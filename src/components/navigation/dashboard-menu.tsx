@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useTheme } from "@/providers/theme-provider";
 import { MapPin, HeartIcon, LogOutIcon, MenuIcon, SettingsIcon, UserIcon, Sun, Moon, EyeIcon } from "lucide-react"
-import {useNavigate} from "react-router"
+import {useNavigate} from "react-router-dom"
 import { toast } from "react-toastify";
 
 export default function DashboardButton() {

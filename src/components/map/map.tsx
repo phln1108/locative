@@ -6,8 +6,9 @@ import {
 } from "react-leaflet";
 import { useTheme } from "@/providers/theme-provider";
 import { useEffect, useState } from "react";
-import { Loader2, Search } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import MapControls from "./map-controls";
+import RecenterMap from "./recenter-map";
 
 import "@/lib/map-icons";
 import SearchBar from "../navigation/search-bar";
@@ -58,16 +59,41 @@ export default function Map() {
         });
     };
 
-
     useEffect(() => {
-        getLocation();
+        if (!navigator.geolocation) {
+            const timer = window.setTimeout(() => {
+                setUserPosition(FALLBACK_POSITION);
+                setLoading(false);
+            }, 0);
+
+            return () => window.clearTimeout(timer);
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                const coords: [number, number] = [
+                    pos.coords.latitude,
+                    pos.coords.longitude,
+                ];
+
+                setUserPosition(coords);
+                setLoading(false);
+            },
+            () => {
+                setUserPosition(FALLBACK_POSITION);
+                setLoading(false);
+            },
+            {
+                enableHighAccuracy: false,
+                timeout: 15000,
+                maximumAge: 60000,
+            }
+        );
     }, []);
 
     return (
         <div className="relative h-full w-full">
             <MapContainer
-                center={FALLBACK_POSITION}
-                zoom={16}
                 zoomControl={false}
                 className="h-full w-full"
             >
@@ -89,6 +115,7 @@ export default function Map() {
                 />
 
                 <MapControls getLocation={getLocation} />
+                <RecenterMap position={userPosition ?? FALLBACK_POSITION} />
                 {userPosition && (
                     <Marker position={userPosition}>
                         <Popup>

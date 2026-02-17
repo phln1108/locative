@@ -8,7 +8,7 @@ export default function App() {
     <ThemeProvider>
       <ThemedToastContainer />
       <div className="w-full flex justify-center">
-        <RouterProvider router={router} />,
+        <RouterProvider router={router} />
       </div>
     </ThemeProvider>
   );
