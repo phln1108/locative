@@ -1,8 +1,14 @@
 import { Star, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import type { TourPlace } from "@/models/models";
 
-type TourCardProps = TourPlace & {
+type TourCardProps = {
+  image: string,
+  title: string,
+  price: number,
+  rating: number,
+  reviews: number,
+  duration: string,
+  highlight?: boolean,
   onClick?: () => void;
 };
 
