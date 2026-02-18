@@ -67,10 +67,7 @@ export const mockedPlaces: Place[] = [
             zip: "60150-000",
         },
 
-        coordinates: {
-            lat: -3.7319,
-            lng: -38.5267,
-        },
+        coordinates: { lat: -3.7685, lng: -38.4819 },
 
         contact: {
             phone: "85999998888",
@@ -144,6 +141,8 @@ export const mockedPlaces: Place[] = [
             "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085",
         ],
 
+        coordinates: { lat: -3.7696, lng: -38.4814 },
+
         rating: 4.7,
         reviews: 182,
 
@@ -212,6 +211,8 @@ export const mockedPlaces: Place[] = [
             "https://images.unsplash.com/photo-1571902943202-507ec2618e8f",
         ],
 
+        coordinates: { lat: -3.7702, lng: -38.4830 },
+
         rating: 4.6,
         reviews: 126,
 
@@ -266,6 +267,8 @@ export const mockedPlaces: Place[] = [
             "https://images.unsplash.com/photo-1606819717115-9159c900370b",
         ],
 
+        coordinates: { lat: -3.7678, lng: -38.4834 },
+
         rating: 4.9,
         reviews: 204,
 
@@ -311,6 +314,9 @@ export const mockedPlaces: Place[] = [
         images: [
             "https://images.unsplash.com/photo-1749566679636-a9b0f4c52e08",
         ],
+
+        coordinates: { lat: -3.7699, lng: -38.4808 },
+
 
         rating: 4.5,
         reviews: 320,
@@ -362,6 +368,8 @@ export const mockedPlaces: Place[] = [
             "https://images.unsplash.com/photo-1512820790803-83ca734da794",
         ],
 
+        coordinates: { lat: -3.7708, lng: -38.4825 },
+
         rating: 4.8,
         reviews: 140,
 
@@ -406,6 +414,8 @@ export const mockedPlaces: Place[] = [
             "https://images.unsplash.com/photo-1530041539828-114de669390e",
         ],
 
+        coordinates: { lat: -3.7712, lng: -38.4840 },
+
         rating: 4.6,
         reviews: 98,
 
@@ -446,6 +456,8 @@ export const mockedPlaces: Place[] = [
             "https://images.unsplash.com/photo-1441986300917-64674bd600d8",
         ],
 
+        coordinates: { lat: -3.7689, lng: -38.4832 },
+
         rating: 4.4,
         reviews: 110,
 
@@ -472,6 +484,8 @@ export const mockedPlaces: Place[] = [
         images: [
             "https://images.unsplash.com/photo-1436076863939-06870fe779c2",
         ],
+
+        coordinates: { lat: -3.7675, lng: -38.4810 },
 
         rating: 4.7,
         reviews: 143,
@@ -502,6 +516,8 @@ export const mockedPlaces: Place[] = [
             "https://images.unsplash.com/photo-1758573467051-1d50c47b51c5",
         ],
 
+        coordinates: { lat: -3.7693, lng: -38.4837 },
+
         rating: 4.3,
         reviews: 76,
 
@@ -527,6 +543,8 @@ export const mockedPlaces: Place[] = [
         images: [
             "https://images.unsplash.com/photo-1604954433587-ac0647e6e3f0",
         ],
+
+        coordinates: { lat: -3.7705, lng: -38.4805 },
 
         rating: 4.9,
         reviews: 156,
@@ -558,6 +576,8 @@ export const mockedPlaces: Place[] = [
             "https://images.unsplash.com/photo-1623194417728-adf641357d41",
         ],
 
+        coordinates: { lat: -3.7682, lng: -38.4842 },
+
         rating: 4.6,
         reviews: 189,
 
@@ -578,6 +598,8 @@ export const mockedPlaces: Place[] = [
             "https://images.unsplash.com/photo-1593260085573-8c27e72cdd79",
         ],
 
+        coordinates: { lat: -3.7715, lng: -38.4828 },
+
         rating: 4.8,
         reviews: 274,
 
@@ -597,6 +619,8 @@ export const mockedPlaces: Place[] = [
         images: [
             "https://images.unsplash.com/photo-1664128901953-962539306582",
         ],
+
+        coordinates: { lat: -3.7679, lng: -38.4802 },
 
         rating: 4.7,
         reviews: 342,

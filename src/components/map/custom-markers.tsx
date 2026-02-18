@@ -2,55 +2,79 @@ import type React from "react";
 import L from "leaflet";
 import { Marker } from "react-leaflet";
 import { renderToStaticMarkup } from "react-dom/server";
-import { Mars } from "lucide-react";
+import {
+  MapPin,
+  Store,
+  Landmark,
+} from "lucide-react";
 
 interface CustomMarkerProps {
-    position: L.LatLngExpression;
-    children: React.ReactNode;
+  position: L.LatLngExpression;
+  type: "place" | "service" | "tour";
+  children: React.ReactNode;
 }
 
-const CustomMarker: React.FC<CustomMarkerProps> = ({ position, children }) => {
+const getMarkerConfig = (type: CustomMarkerProps["type"]) => {
+  switch (type) {
+    case "place":
+      return {
+        icon: <MapPin size={16} />,
+        color: "bg-emerald-500",
+      };
+    case "service":
+      return {
+        icon: <Store size={16} />,
+        color: "bg-yellow-500",
+      };
+    case "tour":
+      return {
+        icon: <Landmark size={16} />,
+        color: "bg-orange-500",
+      };
+    default:
+      return {
+        icon: <MapPin size={16} />,
+        color: "bg-primary",
+      };
+  }
+};
 
-    const iconMarkup = renderToStaticMarkup(
-        <Mars size={16} className="text-primary" />
-    );
+const CustomMarker: React.FC<CustomMarkerProps> = ({
+  position,
+  type,
+  children,
+}) => {
+  const config = getMarkerConfig(type);
 
-    const customIcon = L.divIcon({
-        html: `
-            <div class="flex flex-col items-center">
-            
-            <div class="
-                flex items-center justify-center
-                w-7 h-7
-                bg-card
-                text-primary
-                rounded-full
-                shadow-(--shadow-floating)
-            ">
-                ${iconMarkup}
-            </div>
+  const iconMarkup = renderToStaticMarkup(
+    <div className="text-white">{config.icon}</div>
+  );
 
-            <div class="
-                w-0 h-0
-                border-l-[6px] border-l-transparent
-                border-r-[6px] border-r-transparent
-                border-t-10
-                border-t-card
-                -mt-0.5
-            "></div>
+  const customIcon = L.divIcon({
+    html: `
+      <div class="flex flex-col items-center">
+        <div class="
+          flex items-center justify-center
+          w-8 h-8
+          ${config.color}
+          rounded-full
+          shadow-md
+        ">
+          ${iconMarkup}
+        </div>
+        
+      </div>
+    `,
+    className: "",
+    iconSize: [32, 42],
+    iconAnchor: [16, 42],
+  });
 
-            </div>
-        `,
-        className: "",
-        iconSize: [28, 38],
-        iconAnchor: [14, 38],
-    });
-
-    return (
-        <Marker position={position} icon={customIcon}>
-            {children}
-        </Marker>
-    );
+  return (
+    <Marker position={position} icon={customIcon}>
+      {children}
+    </Marker>
+  );
 };
 
 export default CustomMarker;

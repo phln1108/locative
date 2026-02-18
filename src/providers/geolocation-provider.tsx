@@ -10,7 +10,7 @@ import {
 
 type Coordinates = [number, number];
 
-const FALLBACK_POSITION: Coordinates = [-3.7697601315439884, -38.48177776878083];
+const FALLBACK_POSITION: Coordinates = [-3.769070523446473, -38.48214944213391];
 
 interface GeolocationContextType {
   userPosition: Coordinates | null;
@@ -28,7 +28,7 @@ export function GeolocationProvider({ children }: { children: ReactNode }) {
   const isSupported =
     typeof navigator !== "undefined" && !!navigator.geolocation;
 
-  const [userPosition, setUserPosition] = useState<Coordinates | null>(null);
+  const [userPosition, setUserPosition] = useState<Coordinates | null>(FALLBACK_POSITION);
   const [loading, setLoading] = useState<boolean>(isSupported);
   const [error, setError] = useState<string | null>(
     isSupported ? null : "Geolocalizacao nao suportada neste dispositivo."
