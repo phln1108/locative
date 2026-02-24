@@ -10,7 +10,7 @@ import { deriveCategories } from "@/lib/derivations";
 const HomePage = () => {
   const navigate = useNavigate();
 
-  let derivedCategories = deriveCategories(mockedPlaces)
+  const derivedCategories = deriveCategories(mockedPlaces)
 
   return (
     <div className="space-y-10">

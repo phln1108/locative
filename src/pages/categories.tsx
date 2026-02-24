@@ -6,7 +6,7 @@ import { mockedPlaces } from "@/data/mocked-places";
 
 export default function CategoriesPage() {
 
-  let derivedCategories = deriveCategories(mockedPlaces)
+  const derivedCategories = deriveCategories(mockedPlaces)
 
   return (
     <main className="w-full">

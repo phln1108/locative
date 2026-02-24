@@ -55,7 +55,6 @@ export function deriveBadges(place: Place): DerivedBadge[] {
   // Ordenação por prioridade
   return badges
     .sort((a, b) => (a.priority ?? 99) - (b.priority ?? 99))
-    .map(({ priority, ...badge }) => badge);
 }
 
 import { getCategoryByKey } from "@/data/categories";
