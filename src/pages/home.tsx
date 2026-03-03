@@ -32,6 +32,7 @@ const HomePage = () => {
                 label={category.label}
                 count={category.nearBy}
                 color={category.color}
+                onClick={() => navigate(`/category?category=${category.key}`)}
               />
             ))}
           </div>
@@ -74,6 +75,7 @@ const HomePage = () => {
           <SectionHeader
             title="Já conhece Fortaleza?"
             description="Escolha uma opção de tour indicada por gente de verdade"
+            onAction={() => {}}
           />
 
           <div className="relative">

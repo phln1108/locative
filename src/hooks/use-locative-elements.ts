@@ -1,4 +1,4 @@
-import type { LocativeUnion } from "@/models/locative-union";
+import type { LocativeUnion } from "@/domain/models/locative-union";
 import { locativeService } from "@/services/locative.service";
 
 export function useLocativeElements() {

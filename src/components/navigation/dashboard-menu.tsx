@@ -35,12 +35,14 @@ export default function DashboardButton() {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                     <DropdownMenuItem
-                        onClick={() => navigate("profile")}
+                        onClick={() => navigate("/profile")}
                     >
                         <UserIcon />
                         Perfil
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={() => navigate("/favorites")}
+                    >
                         <HeartIcon />
                         Meus Favoritos
                     </DropdownMenuItem>

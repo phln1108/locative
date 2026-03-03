@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   Calendar,
   Globe,
+  Heart,
   MapPin,
   Navigation,
   Phone,
@@ -80,9 +81,27 @@ export default function DetailPage({ data }: Props) {
         <button
           onClick={() => navigate(-1)}
           className="absolute top-4 left-4 bg-background/90 backdrop-blur-sm p-2 rounded-full shadow"
+          aria-label="Voltar"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
+
+        <div className="absolute top-4 right-4 flex items-center gap-2">
+          <button
+            type="button"
+            className="bg-background/90 backdrop-blur-sm p-2 rounded-full shadow hover:bg-background transition-colors"
+            aria-label="Compartilhar"
+          >
+            <Share2 className="w-5 h-5" />
+          </button>
+          <button
+            type="button"
+            className="bg-background/90 backdrop-blur-sm p-2 rounded-full shadow hover:bg-background transition-colors"
+            aria-label="Favoritar"
+          >
+            <Heart className="w-5 h-5" />
+          </button>
+        </div>
 
         <div className="absolute bottom-7 right-4 bg-black/60 text-white px-3 py-1 rounded-full text-sm">
           {current} / {data.images.length}

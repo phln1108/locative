@@ -33,8 +33,10 @@ import {
     LogOut,
 } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfilePage() {
+    const navigate = useNavigate();
     const [notifications, setNotifications] = useState(true);
     const [publicProfile, setPublicProfile] = useState(true);
 
@@ -267,7 +269,11 @@ export default function ProfilePage() {
                         <ChevronRight className="w-4 h-4" />
                     </Button>
 
-                    <Button variant="ghost" className="w-full justify-between">
+                    <Button
+                        variant="ghost"
+                        className="w-full justify-between"
+                        onClick={() => navigate("/favorites")}
+                    >
                         <span className="flex items-center gap-2">
                             <Heart className="w-4 h-4" />
                             Meus Favoritos

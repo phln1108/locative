@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { CategoryCard } from "@/components/ui/category-card";
 import { deriveCategories } from "@/lib/derivations";
 import { mockedPlaces } from "@/data/mocked-places";
+import { useNavigate } from "react-router-dom";
 
 export default function CategoriesPage() {
+  const navigate = useNavigate();
 
   const derivedCategories = deriveCategories(mockedPlaces)
 
@@ -40,6 +42,7 @@ export default function CategoriesPage() {
               count={category.nearBy}
               color={category.color}
               variant="grid"
+              onClick={() => navigate(`/category?category=${category.key}`)}
             />
           ))}
         </div>

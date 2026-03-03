@@ -1,7 +1,6 @@
-import type { LocativeUnion } from "@/models/locative-union";
+import type { LocativeUnion } from "@/domain/models/locative-union";
 
 export const mockedElements: LocativeUnion[] = [
-
   {
     element_id: "1",
     element_type: "commercial_poi",
@@ -9,40 +8,28 @@ export const mockedElements: LocativeUnion[] = [
     description: "Restaurante italiano tradicional.",
     geometry: { type: "Point", coordinates: [-38.4819, -3.7685] },
     status: "active",
-
+    interaction_potential: ["qr"],
     media: [
       {
         media_id: "1-1",
         type: "image",
         url: "https://images.unsplash.com/photo-1722587561829-8a53e1935e20",
-        caption: "Ambiente interno",
-        visibility: "public",
-      },
-      {
-        media_id: "1-2",
-        type: "image",
-        url: "https://images.unsplash.com/photo-1600891964599-f61ba0e24092",
-        caption: "Prato principal",
         visibility: "public",
       },
     ],
-
     categories: [
       { code: "commercial_poi", is_primary: true },
       { code: "food_beverage", is_primary: false },
     ],
-
     poi_macro_type: "food_beverage",
     rating: { value: 4.8, count: 214 },
   },
-
   {
     element_id: "2",
     element_type: "commercial_poi",
     name: "Blue Bottle Coffee",
     geometry: { type: "Point", coordinates: [-38.4814, -3.7696] },
     status: "active",
-
     media: [
       {
         media_id: "2-1",
@@ -51,23 +38,19 @@ export const mockedElements: LocativeUnion[] = [
         visibility: "public",
       },
     ],
-
     categories: [
       { code: "commercial_poi", is_primary: true },
       { code: "food_beverage", is_primary: false },
     ],
-
     poi_macro_type: "food_beverage",
     rating: { value: 4.7, count: 182 },
   },
-
   {
     element_id: "3",
     element_type: "commercial_poi",
     name: "FitLife Gym",
     geometry: { type: "Point", coordinates: [-38.483, -3.7702] },
     status: "active",
-
     media: [
       {
         media_id: "3-1",
@@ -76,23 +59,19 @@ export const mockedElements: LocativeUnion[] = [
         visibility: "public",
       },
     ],
-
     categories: [
       { code: "commercial_poi", is_primary: true },
       { code: "personal_services", is_primary: false },
     ],
-
     poi_macro_type: "personal_services",
     rating: { value: 4.6, count: 126 },
   },
-
   {
     element_id: "4",
     element_type: "commercial_poi",
     name: "Modern Art Gallery",
     geometry: { type: "Point", coordinates: [-38.4834, -3.7678] },
     status: "active",
-
     media: [
       {
         media_id: "4-1",
@@ -101,23 +80,19 @@ export const mockedElements: LocativeUnion[] = [
         visibility: "public",
       },
     ],
-
     categories: [
       { code: "commercial_poi", is_primary: true },
       { code: "entertainment", is_primary: false },
     ],
-
     poi_macro_type: "entertainment",
     rating: { value: 4.9, count: 204 },
   },
-
   {
     element_id: "5",
     element_type: "commercial_poi",
     name: "Tech Store Premium",
     geometry: { type: "Point", coordinates: [-38.4808, -3.7699] },
     status: "active",
-
     media: [
       {
         media_id: "5-1",
@@ -126,23 +101,19 @@ export const mockedElements: LocativeUnion[] = [
         visibility: "public",
       },
     ],
-
     categories: [
       { code: "commercial_poi", is_primary: true },
       { code: "retail", is_primary: false },
     ],
-
     poi_macro_type: "retail",
     rating: { value: 4.5, count: 320 },
   },
-
   {
     element_id: "6",
     element_type: "commercial_poi",
     name: "Indie Bookshop",
     geometry: { type: "Point", coordinates: [-38.4825, -3.7708] },
     status: "active",
-
     media: [
       {
         media_id: "6-1",
@@ -151,24 +122,172 @@ export const mockedElements: LocativeUnion[] = [
         visibility: "public",
       },
     ],
-
+    categories: [
+      { code: "commercial_poi", is_primary: true },
+      { code: "private_education", is_primary: false },
+    ],
+    poi_macro_type: "private_education",
+    rating: { value: 4.8, count: 140 },
+  },
+  {
+    element_id: "7",
+    element_type: "commercial_poi",
+    name: "Pet Care Clinic",
+    geometry: { type: "Point", coordinates: [-38.484, -3.7712] },
+    status: "active",
+    media: [
+      {
+        media_id: "7-1",
+        type: "image",
+        url: "https://images.unsplash.com/photo-1530041539828-114de669390e",
+        visibility: "public",
+      },
+    ],
+    categories: [
+      { code: "commercial_poi", is_primary: true },
+      { code: "personal_services", is_primary: false },
+    ],
+    poi_macro_type: "personal_services",
+    rating: { value: 4.6, count: 98 },
+  },
+  {
+    element_id: "8",
+    element_type: "commercial_poi",
+    name: "Fashion Forward",
+    geometry: { type: "Point", coordinates: [-38.4832, -3.7689] },
+    status: "active",
+    media: [
+      {
+        media_id: "8-1",
+        type: "image",
+        url: "https://images.unsplash.com/photo-1441986300917-64674bd600d8",
+        visibility: "public",
+      },
+    ],
     categories: [
       { code: "commercial_poi", is_primary: true },
       { code: "retail", is_primary: false },
     ],
-
     poi_macro_type: "retail",
-    rating: { value: 4.8, count: 140 },
+    rating: { value: 4.4, count: 110 },
   },
-
+  {
+    element_id: "9",
+    element_type: "commercial_poi",
+    name: "Craft Beer Bar",
+    geometry: { type: "Point", coordinates: [-38.481, -3.7675] },
+    status: "active",
+    media: [
+      {
+        media_id: "9-1",
+        type: "image",
+        url: "https://images.unsplash.com/photo-1436076863939-06870fe779c2",
+        visibility: "public",
+      },
+    ],
+    categories: [
+      { code: "commercial_poi", is_primary: true },
+      { code: "nightlife", is_primary: false },
+    ],
+    poi_macro_type: "nightlife",
+    rating: { value: 4.7, count: 143 },
+  },
+  {
+    element_id: "10",
+    element_type: "public_service",
+    name: "City Pharmacy Plus",
+    geometry: { type: "Point", coordinates: [-38.4837, -3.7693] },
+    status: "active",
+    media: [
+      {
+        media_id: "10-1",
+        type: "image",
+        url: "https://images.unsplash.com/photo-1758573467051-1d50c47b51c5",
+        visibility: "public",
+      },
+    ],
+    categories: [
+      { code: "public_service", is_primary: true },
+      { code: "health", is_primary: false },
+    ],
+    public_service_domain: "health",
+    contact: { phone: "85911112222" },
+  },
+  {
+    element_id: "11",
+    element_type: "situated_event",
+    name: "Dunas e Lagoas",
+    geometry: { type: "Point", coordinates: [-38.4805, -3.7705] },
+    status: "active",
+    media: [
+      {
+        media_id: "11-1",
+        type: "image",
+        url: "https://images.unsplash.com/photo-1604954433587-ac0647e6e3f0",
+        visibility: "public",
+      },
+    ],
+    categories: [
+      { code: "situated_event", is_primary: true },
+      { code: "tourism_hospitality", is_primary: false },
+    ],
+    event_kind: "festival",
+    start_datetime: "2026-03-15T09:00:00-03:00",
+    end_datetime: "2026-03-15T15:00:00-03:00",
+    ticketing: { free: false, price_range: "R$ 120" },
+  },
+  {
+    element_id: "12",
+    element_type: "situated_event",
+    name: "Centro Historico",
+    geometry: { type: "Point", coordinates: [-38.4842, -3.7682] },
+    status: "active",
+    media: [
+      {
+        media_id: "12-1",
+        type: "image",
+        url: "https://images.unsplash.com/photo-1623194417728-adf641357d41",
+        visibility: "public",
+      },
+    ],
+    categories: [
+      { code: "situated_event", is_primary: true },
+      { code: "tourism_hospitality", is_primary: false },
+    ],
+    event_kind: "workshop",
+    start_datetime: "2026-03-20T14:00:00-03:00",
+    end_datetime: "2026-03-20T17:00:00-03:00",
+    ticketing: { free: false, price_range: "R$ 55" },
+  },
+  {
+    element_id: "13",
+    element_type: "situated_event",
+    name: "Gastronomia Cearense",
+    geometry: { type: "Point", coordinates: [-38.4828, -3.7715] },
+    status: "active",
+    media: [
+      {
+        media_id: "13-1",
+        type: "image",
+        url: "https://images.unsplash.com/photo-1593260085573-8c27e72cdd79",
+        visibility: "public",
+      },
+    ],
+    categories: [
+      { code: "situated_event", is_primary: true },
+      { code: "food_beverage", is_primary: false },
+    ],
+    event_kind: "festival",
+    start_datetime: "2026-03-22T18:00:00-03:00",
+    end_datetime: "2026-03-22T22:00:00-03:00",
+    ticketing: { free: false, price_range: "R$ 95" },
+  },
   {
     element_id: "14",
     element_type: "natural_element",
     name: "Praias Urbanas",
     geometry: { type: "Point", coordinates: [-38.4802, -3.7679] },
-    natural_kind: "beach",
     status: "active",
-
     media: [
       {
         media_id: "14-1",
@@ -177,5 +296,7 @@ export const mockedElements: LocativeUnion[] = [
         visibility: "public",
       },
     ],
+    categories: [{ code: "natural_element", is_primary: true }],
+    natural_kind: "beach",
   },
 ];

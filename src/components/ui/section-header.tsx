@@ -28,7 +28,7 @@ export function SectionHeader({
         )}
       </div>
 
-      {actionLabel && (
+      {onAction && (
         <Button
           variant="ghost"
           className="gap-1 shrink-0"

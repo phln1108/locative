@@ -6,6 +6,7 @@ interface CategoryCardProps {
   count: number;
   color: string;
   variant?: "carousel" | "grid";
+  onClick?: () => void;
 };
 
 
@@ -14,10 +15,13 @@ export function CategoryCard({
   label,
   count,
   color,
-  variant
+  variant,
+  onClick,
 }: CategoryCardProps) {
   return (
     <button
+      type="button"
+      onClick={onClick}
       style={{ backgroundColor: color }}
       className={cn(
         "cursor-pointer rounded-3xl flex flex-col items-start justify-between transition-all duration-200 active:scale-[0.96] hover:shadow-md shadow-sm",

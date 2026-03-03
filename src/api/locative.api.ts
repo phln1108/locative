@@ -1,5 +1,5 @@
+import type { LocativeUnion } from "@/domain/models/locative-union";
 import { http } from "./http-client";
-import type { LocativeUnion } from "@/models/locative-union";
 
 export const locativeApi = {
   async list(params?: Record<string, any>) {

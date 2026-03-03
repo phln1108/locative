@@ -8,11 +8,14 @@ import {
 import { useTheme } from "@/providers/theme-provider";
 import { useGeolocation } from "@/providers/geolocation-provider";
 import { Loader2 } from "lucide-react";
+import { useState } from "react";
 import MapControls from "./map-controls";
 import RecenterMap from "./recenter-map";
 import CustomMarker from "./custom-markers";
 import { mockedPlaces } from "@/data/mocked-places";
 import { useNavigate } from "react-router-dom";
+import NearbyPlacesCarousel from "../ui/NearbyPlacesCarousel";
+import { Button } from "../ui/button";
 
 import "@/lib/map-icons";
 import SearchBar from "../navigation/search-bar";
@@ -21,11 +24,18 @@ export default function Map() {
     const { theme } = useTheme();
     const { userPosition, position, loading, requestLocation } = useGeolocation();
     const navigate = useNavigate();
+    const [showNearbyPlaces, setShowNearbyPlaces] = useState(false);
 
     // 🔹 Aqui simulamos o retorno do backend
     const nearbyPlaces = mockedPlaces.filter(
         (place) => place.coordinates
     );
+    const carouselPlaces = nearbyPlaces.map((place) => ({
+        id: place.id,
+        image: place.images[0],
+        title: place.title,
+        distance: place.distance ?? "Sem distancia",
+    }));
 
     return (
         <div className="relative h-full w-full">
@@ -135,6 +145,38 @@ export default function Map() {
                     <Loader2 className="animate-spin text-primary" size={32} />
                 </div>
             )}
+
+            <div className="absolute bottom-0 left-0 right-0 z-1000 pb-4">
+                <div
+                    className={[
+                        "flex justify-end px-4 -mb-24 transition-transform duration-300 ease-out",
+                        showNearbyPlaces ? "-translate-y-22" : "translate-y-0",
+                    ].join(" ")}
+                >
+                    <Button
+                        type="button"
+                        variant="secondary"
+                        className="shadow-md"
+                        onClick={() => setShowNearbyPlaces((current) => !current)}
+                    >
+                        {showNearbyPlaces ? "Ocultar" : "Lugares próximos"}
+                    </Button>
+                </div>
+
+                <div
+                    className={[
+                        "transition-transform duration-300 ease-out will-change-transform",
+                        showNearbyPlaces
+                            ? "translate-y-0 pointer-events-auto"
+                            : "translate-y-full pointer-events-none",
+                    ].join(" ")}
+                >
+                    <NearbyPlacesCarousel
+                        places={carouselPlaces}
+                        onSelect={(id) => navigate(`/bio/${id}`)}
+                    />
+                </div>
+            </div>
         </div>
     );
 }
