@@ -64,6 +64,7 @@ const NearbyPlacesPage = () => {
             subtitle={place.subtitle ?? getCategoryByKey(place.categoryKey)?.label ?? ""}
             distance={place.distance ?? ""}
             rating={place.rating ?? 0}
+            priceLevel={place.priceLevel}
             variant="grid"
             onClick={() => navigate(`/bio/${place.id}`)}
           />

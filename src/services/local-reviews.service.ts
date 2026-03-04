@@ -29,6 +29,12 @@ function writeStorage(reviews: UserReview[]) {
 }
 
 export const localReviewsService = {
+  listMine(): UserReview[] {
+    return readStorage()
+      .filter((review) => review.user === CURRENT_USER)
+      .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  },
+
   listByPlace(placeId: number): UserReview[] {
     return readStorage().filter((review) => review.placeId === placeId);
   },

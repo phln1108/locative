@@ -18,6 +18,7 @@ function mapPlaceToCardVM(place: Place): PlaceCardVM {
     reviews: place.reviews ?? 0,
     distance: place.distance ?? "N/A",
     price: place.type === "tour" && place.price ? `R$ ${place.price}` : undefined,
+    priceLevel: place.priceLevel,
     openNow: place.openingHours?.openNow,
     address,
     phone: place.contact?.phone,

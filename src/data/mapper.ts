@@ -99,6 +99,8 @@ function mapElementToBasePlace(element: LocativeUnion): Place {
 
   const rating = "rating" in element ? element.rating?.value : undefined;
   const reviews = "rating" in element ? element.rating?.count : undefined;
+  const priceLevel =
+    element.element_type === "commercial_poi" ? element.price_level : undefined;
 
   return {
     id: Number(element.element_id),
@@ -110,6 +112,7 @@ function mapElementToBasePlace(element: LocativeUnion): Place {
     images: [image],
     rating,
     reviews,
+    priceLevel,
     coordinates,
     address: element.address
       ? {

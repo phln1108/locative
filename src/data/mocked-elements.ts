@@ -22,6 +22,7 @@ export const mockedElements: LocativeUnion[] = [
       { code: "food_beverage", is_primary: false },
     ],
     poi_macro_type: "food_beverage",
+    price_level: 3,
     rating: { value: 4.8, count: 214 },
   },
   {
@@ -43,6 +44,7 @@ export const mockedElements: LocativeUnion[] = [
       { code: "food_beverage", is_primary: false },
     ],
     poi_macro_type: "food_beverage",
+    price_level: 2,
     rating: { value: 4.7, count: 182 },
   },
   {
@@ -64,6 +66,7 @@ export const mockedElements: LocativeUnion[] = [
       { code: "personal_services", is_primary: false },
     ],
     poi_macro_type: "personal_services",
+    price_level: 2,
     rating: { value: 4.6, count: 126 },
   },
   {
@@ -85,6 +88,7 @@ export const mockedElements: LocativeUnion[] = [
       { code: "entertainment", is_primary: false },
     ],
     poi_macro_type: "entertainment",
+    price_level: 2,
     rating: { value: 4.9, count: 204 },
   },
   {
@@ -106,6 +110,7 @@ export const mockedElements: LocativeUnion[] = [
       { code: "retail", is_primary: false },
     ],
     poi_macro_type: "retail",
+    price_level: 3,
     rating: { value: 4.5, count: 320 },
   },
   {
@@ -127,6 +132,7 @@ export const mockedElements: LocativeUnion[] = [
       { code: "private_education", is_primary: false },
     ],
     poi_macro_type: "private_education",
+    price_level: 2,
     rating: { value: 4.8, count: 140 },
   },
   {
@@ -148,6 +154,7 @@ export const mockedElements: LocativeUnion[] = [
       { code: "personal_services", is_primary: false },
     ],
     poi_macro_type: "personal_services",
+    price_level: 2,
     rating: { value: 4.6, count: 98 },
   },
   {
@@ -169,6 +176,7 @@ export const mockedElements: LocativeUnion[] = [
       { code: "retail", is_primary: false },
     ],
     poi_macro_type: "retail",
+    price_level: 2,
     rating: { value: 4.4, count: 110 },
   },
   {
@@ -190,6 +198,7 @@ export const mockedElements: LocativeUnion[] = [
       { code: "nightlife", is_primary: false },
     ],
     poi_macro_type: "nightlife",
+    price_level: 3,
     rating: { value: 4.7, count: 143 },
   },
   {
@@ -211,6 +220,7 @@ export const mockedElements: LocativeUnion[] = [
       { code: "finance", is_primary: false },
     ],
     poi_macro_type: "finance",
+    price_level: 2,
     rating: { value: 4.5, count: 89 },
   },
   {
@@ -232,6 +242,7 @@ export const mockedElements: LocativeUnion[] = [
       { code: "professional_services", is_primary: false },
     ],
     poi_macro_type: "professional_services",
+    price_level: 3,
     rating: { value: 4.4, count: 57 },
   },
   {
@@ -253,6 +264,7 @@ export const mockedElements: LocativeUnion[] = [
       { code: "tourism_hospitality", is_primary: false },
     ],
     poi_macro_type: "tourism_hospitality",
+    price_level: 4,
     rating: { value: 4.6, count: 173 },
   },
   {
@@ -274,6 +286,7 @@ export const mockedElements: LocativeUnion[] = [
       { code: "automotive", is_primary: false },
     ],
     poi_macro_type: "automotive",
+    price_level: 2,
     rating: { value: 4.3, count: 64 },
   },
   {

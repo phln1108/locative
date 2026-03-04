@@ -3,6 +3,14 @@ import { mockedPlacesFromDomain } from "./mapper";
 
 export const mockedPlaces = mockedPlacesFromDomain;
 
+function inferPriceLevelFromPrice(price?: number): 0 | 1 | 2 | 3 | 4 | undefined {
+  if (typeof price !== "number") return undefined;
+  if (price <= 40) return 1;
+  if (price <= 90) return 2;
+  if (price <= 180) return 3;
+  return 4;
+}
+
 export const mockedNearPlaces = mockedPlaces
   .filter((place) => place.type !== "tour")
   .map((place) => ({
@@ -12,6 +20,7 @@ export const mockedNearPlaces = mockedPlaces
     subtitle: place.subtitle ?? getCategoryByKey(place.categoryKey)?.label ?? "",
     distance: place.distance ?? "",
     rating: place.rating ?? 0,
+    priceLevel: place.priceLevel,
   }));
 
 export const mockedTours = mockedPlaces
@@ -23,6 +32,7 @@ export const mockedTours = mockedPlaces
     price: tour.price ?? 0,
     rating: tour.rating ?? 0,
     reviews: tour.reviews ?? 0,
+    priceLevel: tour.priceLevel ?? inferPriceLevelFromPrice(tour.price),
     duration: tour.duration ?? "",
     highlight:
       tour.badges?.some((badge) => badge.label === "Mais vendido") ?? false,
@@ -39,6 +49,7 @@ export const mockedFavoritePlaces = mockedPlaces
     subtitle: place.subtitle ?? getCategoryByKey(place.categoryKey)?.label ?? "",
     distance: place.distance ?? "",
     rating: place.rating ?? 0,
+    priceLevel: place.priceLevel,
   }));
 
 export const mockedFavoriteTours = mockedPlaces
@@ -50,6 +61,7 @@ export const mockedFavoriteTours = mockedPlaces
     price: tour.price ?? 0,
     rating: tour.rating ?? 0,
     reviews: tour.reviews ?? 0,
+    priceLevel: tour.priceLevel ?? inferPriceLevelFromPrice(tour.price),
     duration: tour.duration ?? "",
     highlight:
       tour.badges?.some((badge) => badge.label === "Mais vendido") ?? false,

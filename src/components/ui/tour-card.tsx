@@ -5,6 +5,7 @@ type TourCardProps = {
   image: string,
   title: string,
   price: number,
+  priceLevel?: 0 | 1 | 2 | 3 | 4,
   rating: number,
   reviews: number,
   duration: string,
@@ -16,12 +17,18 @@ export function TourCard({
   image,
   title,
   price,
+  priceLevel,
   rating,
   reviews,
   duration,
   highlight,
   onClick,
 }: TourCardProps) {
+  const priceLevelLabel =
+    typeof priceLevel === "number" && priceLevel > 0
+      ? "$".repeat(priceLevel)
+      : null;
+
   return (
     <div
       className="w-45 shrink-0 cursor-pointer transition-all duration-200 active:scale-[0.96] hover:shadow-md"
@@ -60,6 +67,11 @@ export function TourCard({
           <span className="text-muted-foreground">
             ({reviews})
           </span>
+          {priceLevelLabel && (
+            <span className="text-muted-foreground font-semibold">
+              {priceLevelLabel}
+            </span>
+          )}
         </div>
 
         <div className="flex items-center gap-1 text-xs text-muted-foreground">

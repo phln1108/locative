@@ -5,6 +5,7 @@ interface NearbyPlace {
   image: string;
   title: string;
   distance: string;
+  priceLevel?: 0 | 1 | 2 | 3 | 4;
 }
 
 interface NearbyPlacesCarouselProps {
@@ -32,6 +33,7 @@ export default function NearbyPlacesCarousel({
               image={place.image}
               title={place.title}
               distance={place.distance}
+              priceLevel={place.priceLevel}
               onClick={() => onSelect?.(place.id)}
             />
           ))}

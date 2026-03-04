@@ -9,6 +9,7 @@ interface NearbyCardProps {
   subtitle: string;
   distance: string;
   rating: number;
+  priceLevel?: 0 | 1 | 2 | 3 | 4;
   variant?: "carousel" | "grid";
   onClick?: () => void;
 }
@@ -19,9 +20,15 @@ export default function NearbyCard({
   subtitle,
   distance,
   rating,
+  priceLevel,
   variant = "carousel",
   onClick,
 }: NearbyCardProps) {
+  const priceLevelLabel =
+    typeof priceLevel === "number" && priceLevel > 0
+      ? "$".repeat(priceLevel)
+      : null;
+
   return (
     <Card
       onClick={onClick}
@@ -60,11 +67,16 @@ export default function NearbyCard({
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
             <Star className="w-4 h-4 fill-warning text-warning" />
             <span className="text-sm font-medium">
               {rating}
             </span>
+            {priceLevelLabel && (
+              <span className="text-xs text-muted-foreground font-semibold">
+                {priceLevelLabel}
+              </span>
+            )}
           </div>
 
           <span className="text-xs text-primary font-medium group-hover:underline">

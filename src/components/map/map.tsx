@@ -45,6 +45,7 @@ export default function Map() {
         image: place.images[0],
         title: place.title,
         distance: place.distance ?? "Sem distancia",
+        priceLevel: place.priceLevel,
     }));
 
     return (

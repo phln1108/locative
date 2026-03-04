@@ -7,6 +7,7 @@ export interface PlaceCardVM {
   reviews?: number;
   distance?: string;
   price?: string;
+  priceLevel?: 0 | 1 | 2 | 3 | 4;
   openNow?: boolean;
   address?: string;
   phone?: string;

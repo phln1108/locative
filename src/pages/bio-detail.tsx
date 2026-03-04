@@ -363,7 +363,7 @@ export default function DetailPage({ data }: Props) {
       </div>
 
       {isReviewModalOpen && (
-        <div className="fixed inset-0 z-[1200] flex items-end sm:items-center justify-center bg-black/45 p-4">
+        <div className="fixed inset-0 z-1200 flex items-end sm:items-center justify-center bg-black/45 p-4">
           <Card className="w-full max-w-lg p-4 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">

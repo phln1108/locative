@@ -22,12 +22,18 @@ export default function PlaceCard({
   reviews,
   distance,
   price,
+  priceLevel,
   openNow,
   address,
   phone,
   website,
   onClick,
 }: PlaceCardVM & { onClick?: () => void }) {
+  const priceLevelLabel =
+    typeof priceLevel === "number" && priceLevel > 0
+      ? "$".repeat(priceLevel)
+      : null;
+
   return (
     <Card
       className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer py-0"
@@ -83,6 +89,15 @@ export default function PlaceCard({
                 <>
                   <Separator orientation="vertical" className="h-4" />
                   <span className="text-muted-foreground">{price}</span>
+                </>
+              )}
+
+              {priceLevelLabel && (
+                <>
+                  <Separator orientation="vertical" className="h-4" />
+                  <span className="text-muted-foreground font-semibold">
+                    {priceLevelLabel}
+                  </span>
                 </>
               )}
 

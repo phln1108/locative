@@ -4,6 +4,7 @@ interface NearbyPlaceCardProps {
   image: string;
   title: string;
   distance: string;
+  priceLevel?: 0 | 1 | 2 | 3 | 4;
   onClick?: () => void;
 }
 
@@ -11,8 +12,14 @@ export default function NearbyPlaceCard({
   image,
   title,
   distance,
+  priceLevel,
   onClick,
 }: NearbyPlaceCardProps) {
+  const priceLevelLabel =
+    typeof priceLevel === "number" && priceLevel > 0
+      ? "$".repeat(priceLevel)
+      : null;
+
   return (
     <button
       onClick={onClick}
@@ -43,6 +50,7 @@ export default function NearbyPlaceCard({
         <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
           <MapPin className="w-3 h-3" />
           <span>{distance}</span>
+          {priceLevelLabel && <span className="font-semibold">{priceLevelLabel}</span>}
         </div>
       </div>
     </button>

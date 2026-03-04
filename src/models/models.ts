@@ -56,6 +56,7 @@ export interface Place {
 
   distance?: string;
   price?: number;
+  priceLevel?: 0 | 1 | 2 | 3 | 4;
   duration?: string;
 
   address?: Address;

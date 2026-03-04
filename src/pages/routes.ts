@@ -12,6 +12,7 @@ import ProfilePage from "./profile";
 import BioPage from "./bio";
 import FavoritesPage from "./favorites";
 import CategoryCardsPage from "./category-cards";
+import ReviewsPage from "./reviews";
 
 
 const router = createBrowserRouter([
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
             {
                 path: "favorites",
                 Component: FavoritesPage
+            },
+            {
+                path: "reviews",
+                Component: ReviewsPage
             },
             {
                 path: "category",
