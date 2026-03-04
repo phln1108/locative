@@ -1,4 +1,3 @@
-import type { LocativeUnion } from "@/domain/models/locative-union";
 import { locativeService } from "@/services/locative.service";
 
 export function useLocativeElements() {
@@ -8,6 +7,6 @@ export function useLocativeElements() {
   });
 }
 
-function useQuery(_arg0: { queryKey: string[]; queryFn: () => Promise<LocativeUnion[]>; }) {
+function useQuery(_arg0: { queryKey: string[]; queryFn: () => Promise<unknown[]>; }) {
     throw new Error("Function not implemented.");
 }
