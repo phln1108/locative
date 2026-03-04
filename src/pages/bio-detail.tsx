@@ -54,6 +54,48 @@ export default function DetailPage({ data }: Props) {
     return `${street}, ${number} - ${neighborhood}, ${city} - ${state}`;
   }, [data.address]);
 
+  const goToRoute = () => {
+    if (!data.coordinates) {
+      navigate("/map");
+      return;
+    }
+
+    const params = new URLSearchParams({
+      destLat: String(data.coordinates.lat),
+      destLng: String(data.coordinates.lng),
+      destId: String(data.id),
+    });
+
+    navigate(`/map?${params.toString()}`);
+  };
+
+  const handleQuickAction = (type: "call" | "website" | "map" | "share") => {
+    if (type === "call" && data.contact?.phone) {
+      window.location.href = `tel:${data.contact.phone}`;
+      return;
+    }
+
+    if (type === "website" && data.contact?.website) {
+      window.open(data.contact.website, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    if (type === "share") {
+      if (typeof navigator !== "undefined" && "share" in navigator) {
+        void navigator.share({
+          title: data.title,
+          text: data.description ?? data.subtitle ?? data.title,
+          url: window.location.href,
+        });
+      }
+      return;
+    }
+
+    if (type === "map") {
+      goToRoute();
+    }
+  };
+
   return (
     <div className="bg-background min-h-screen w-full flex flex-col max-w-10xl flex-1 container mx-auto">
 
@@ -164,6 +206,7 @@ export default function DetailPage({ data }: Props) {
                   key={action.type}
                   variant="outline"
                   className="flex-col gap-1 h-auto py-3"
+                  onClick={() => handleQuickAction(action.type)}
                 >
                   <Icon className="w-5 h-5" />
                   <span>{action.label}</span>
@@ -288,7 +331,10 @@ export default function DetailPage({ data }: Props) {
             </div>
           )}
 
-          <Button className="flex-1 max-w-xs">
+          <Button
+            className="flex-1 max-w-xs"
+            onClick={data.type === "tour" ? undefined : goToRoute}
+          >
             {data.type === "tour" ? (
               <>
                 <Calendar className="w-5 h-5 mr-2" />

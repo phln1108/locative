@@ -8,23 +8,33 @@ import {
 import { useTheme } from "@/providers/theme-provider";
 import { useGeolocation } from "@/providers/geolocation-provider";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import MapControls from "./map-controls";
 import RecenterMap from "./recenter-map";
 import CustomMarker from "./custom-markers";
 import { mockedPlaces } from "@/data/mocked-places";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import NearbyPlacesCarousel from "../ui/NearbyPlacesCarousel";
 import { Button } from "../ui/button";
+import RoutingMachine from "./routing-machine";
 
 import "@/lib/map-icons";
 import SearchBar from "../navigation/search-bar";
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
 export default function Map() {
     const { theme } = useTheme();
     const { userPosition, position, loading, requestLocation } = useGeolocation();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [showNearbyPlaces, setShowNearbyPlaces] = useState(false);
+
+    const destination = useMemo<[number, number] | null>(() => {
+        const destLat = Number(searchParams.get("destLat"));
+        const destLng = Number(searchParams.get("destLng"));
+        if (!Number.isFinite(destLat) || !Number.isFinite(destLng)) return null;
+        return [destLat, destLng];
+    }, [searchParams]);
 
     // 🔹 Aqui simulamos o retorno do backend
     const nearbyPlaces = mockedPlaces.filter(
@@ -65,6 +75,7 @@ export default function Map() {
 
                 <MapControls getLocation={requestLocation} />
                 <RecenterMap position={position} />
+                <RoutingMachine start={position} end={destination} />
 
                 {/* 📍 Usuário */}
                 {userPosition && (

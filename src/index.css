@@ -209,4 +209,8 @@
   filter: none;
 }
 
+/* Oculta o painel/controle visual do leaflet-routing-machine (quadrado no canto). */
+.leaflet-routing-container {
+  display: none !important;
+}
 
