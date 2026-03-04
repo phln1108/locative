@@ -25,8 +25,9 @@ import {
 } from "@/components/ui/carousel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import type { Place } from "@/models/models";
+import type { Place, ReviewDetailed } from "@/models/models";
 import { getCategoryByKey } from "@/data/categories";
+import { localReviewsService } from "@/services/local-reviews.service";
 
 interface Props {
   data: Place;
@@ -37,14 +38,31 @@ export default function DetailPage({ data }: Props) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(1);
 
-  useEffect(() => {
+  const [myRating, setMyRating] = useState<number>(5);
+  const [myComment, setMyComment] = useState<string>("");
+  const [localReviews, setLocalReviews] = useState<ReviewDetailed[]>([]);
 
+  useEffect(() => {
     if (!api) return;
     const onSelect = () => setCurrent(api.selectedScrollSnap() + 1);
     onSelect();
     api.on("select", onSelect);
-    // return () => api.off("select", onSelect);
   }, [api]);
+
+  useEffect(() => {
+    const myReview = localReviewsService.getMyReviewByPlace(data.id);
+    const reviewsByPlace = localReviewsService.listByPlace(data.id);
+
+    setLocalReviews(reviewsByPlace);
+
+    if (myReview) {
+      setMyRating(myReview.rating);
+      setMyComment(myReview.comment);
+    } else {
+      setMyRating(5);
+      setMyComment("");
+    }
+  }, [data.id]);
 
   const category = getCategoryByKey(data.categoryKey);
 
@@ -53,6 +71,11 @@ export default function DetailPage({ data }: Props) {
     const { street, number, neighborhood, city, state } = data.address;
     return `${street}, ${number} - ${neighborhood}, ${city} - ${state}`;
   }, [data.address]);
+
+  const mergedReviews = useMemo(() => {
+    const serverReviews = data.reviewsDetailed ?? [];
+    return [...localReviews, ...serverReviews];
+  }, [data.reviewsDetailed, localReviews]);
 
   const goToRoute = () => {
     if (!data.coordinates) {
@@ -96,10 +119,20 @@ export default function DetailPage({ data }: Props) {
     }
   };
 
+  const saveMyReview = () => {
+    const trimmedComment = myComment.trim();
+    if (!trimmedComment) return;
+
+    localReviewsService.upsertMyReview(data.id, {
+      rating: myRating,
+      comment: trimmedComment,
+    });
+
+    setLocalReviews(localReviewsService.listByPlace(data.id));
+  };
+
   return (
     <div className="bg-background min-h-screen w-full flex flex-col max-w-10xl flex-1 container mx-auto">
-
-      {/* HERO */}
       <div className="relative h-[60vh] bg-muted">
         <Carousel setApi={setApi} className="h-full">
           <CarouselContent className="h-full">
@@ -150,10 +183,7 @@ export default function DetailPage({ data }: Props) {
         </div>
       </div>
 
-      {/* CONTENT */}
       <div className="relative -mt-6 bg-background rounded-t-3xl px-4 sm:px-6 pt-6 pb-32 space-y-8">
-
-        {/* HEADER */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 flex-wrap">
             {data.badges?.map((b) => (
@@ -169,29 +199,23 @@ export default function DetailPage({ data }: Props) {
           </div>
 
           <h1 className="text-3xl font-bold">{data.title}</h1>
-          <p className="text-muted-foreground">
-            {data.subtitle ?? category?.label}
-          </p>
+          <p className="text-muted-foreground">{data.subtitle ?? category?.label}</p>
 
-          {/* Rating */}
           {data.rating && (
             <div className="flex items-center gap-2">
               <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
               <span className="font-semibold">{data.rating}</span>
-              <span className="text-muted-foreground">
-                ({data.reviews ?? 0} avaliações)
-              </span>
+              <span className="text-muted-foreground">({data.reviews ?? 0} avaliacoes)</span>
               <span className="flex items-center text-muted-foreground pl-4 gap-1">
-                <MapPin size={16}/>
+                <MapPin size={16} />
                 {data.distance}
               </span>
             </div>
           )}
         </div>
 
-        {/* QUICK ACTIONS */}
         {data.quickActions?.length && (
-          <div className="grid grid-cols-2 md:grid-cols-4  gap-2">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {data.quickActions.map((action) => {
               const iconMap = {
                 call: Phone,
@@ -216,17 +240,13 @@ export default function DetailPage({ data }: Props) {
           </div>
         )}
 
-        {/* ABOUT */}
         {data.description && (
           <div className="space-y-2">
             <h2 className="text-xl font-semibold">Sobre</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              {data.description}
-            </p>
+            <p className="text-muted-foreground leading-relaxed">{data.description}</p>
           </div>
         )}
 
-        {/* AMENITIES */}
         {data.amenities?.length && (
           <div className="space-y-2">
             <h2 className="text-xl font-semibold">Comodidades</h2>
@@ -240,30 +260,29 @@ export default function DetailPage({ data }: Props) {
           </div>
         )}
 
-        {/* ADDRESS */}
         {fullAddress && (
           <div className="space-y-2">
-            <h2 className="text-xl font-semibold">Endereço</h2>
+            <h2 className="text-xl font-semibold">Endereco</h2>
             <p className="text-muted-foreground">{fullAddress}</p>
           </div>
         )}
 
-        {/* OPENING HOURS */}
         {data.openingHours?.schedule?.length && (
           <div className="space-y-2">
-            <h2 className="text-xl font-semibold">Horário</h2>
+            <h2 className="text-xl font-semibold">Horario</h2>
             <div className="space-y-1 text-sm">
               {data.openingHours.schedule.map((s) => (
                 <div key={s.day} className="flex justify-between">
                   <span>{s.day}</span>
-                  <span>{s.open} - {s.close}</span>
+                  <span>
+                    {s.open} - {s.close}
+                  </span>
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* TABS (Sections) */}
         {data.sections?.length && (
           <Tabs defaultValue={data.sections[0].title}>
             <TabsList className="grid grid-cols-3">
@@ -277,11 +296,11 @@ export default function DetailPage({ data }: Props) {
             {data.sections.map((s) => (
               <TabsContent key={s.title} value={s.title}>
                 <Card className="p-4 space-y-3">
-                  {s.content && (
-                    <p className="text-muted-foreground">{s.content}</p>
-                  )}
+                  {s.content && <p className="text-muted-foreground">{s.content}</p>}
                   {s.items?.map((i) => (
-                    <div key={i} className="text-sm">• {i}</div>
+                    <div key={i} className="text-sm">
+                      * {i}
+                    </div>
                   ))}
                 </Card>
               </TabsContent>
@@ -289,17 +308,56 @@ export default function DetailPage({ data }: Props) {
           </Tabs>
         )}
 
-        {/* REVIEWS */}
-        {data.reviewsDetailed?.length && (
+        <div className="space-y-3">
+          <h2 className="text-xl font-semibold">Sua avaliacao</h2>
+          <Card className="p-4 space-y-3">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="w-full sm:w-52">
+                <label className="text-sm text-muted-foreground">Nota</label>
+                <div className="flex items-center gap-1 mt-2">
+                  {[1, 2, 3, 4, 5].map((value) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setMyRating(value)}
+                      aria-label={`Dar nota ${value}`}
+                      className="p-1 rounded-sm hover:bg-muted transition-colors"
+                    >
+                      <Star
+                        className={
+                          value <= myRating
+                            ? "w-5 h-5 fill-yellow-400 text-yellow-400"
+                            : "w-5 h-5 text-muted-foreground"
+                        }
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="flex-1">
+                <label className="text-sm text-muted-foreground">Comentario</label>
+                <textarea
+                  className="w-full min-h-24 rounded-md border border-input bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  value={myComment}
+                  onChange={(event) => setMyComment(event.target.value)}
+                  placeholder="Conte como foi sua experiencia..."
+                />
+              </div>
+            </div>
+            <div className="flex justify-end">
+              <Button onClick={saveMyReview}>Salvar avaliacao</Button>
+            </div>
+          </Card>
+        </div>
+
+        {mergedReviews.length > 0 && (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Avaliações</h2>
-            {data.reviewsDetailed.map((r) => (
+            <h2 className="text-xl font-semibold">Avaliacoes</h2>
+            {mergedReviews.map((r) => (
               <Card key={r.id} className="p-4 space-y-2">
                 <div className="flex justify-between">
                   <span className="font-medium">{r.user}</span>
-                  <span className="text-sm text-muted-foreground">
-                    {r.date}
-                  </span>
+                  <span className="text-sm text-muted-foreground">{r.date}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
@@ -312,29 +370,21 @@ export default function DetailPage({ data }: Props) {
         )}
       </div>
 
-      {/* CTA FIXO */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background border-t p-4 shadow ">
-        <div className="flex justify-between items-center gap-4 flex-1 container mx-auto ">
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t p-4 shadow">
+        <div className="flex justify-between items-center gap-4 flex-1 container mx-auto">
           {data.type === "tour" ? (
             <div>
               <div className="text-sm text-muted-foreground">A partir de</div>
-              <div className="text-xl font-bold text-primary">
-                R$ {data.price ?? 0}
-              </div>
+              <div className="text-xl font-bold text-primary">R$ {data.price ?? 0}</div>
             </div>
           ) : (
             <div>
-              <div className="text-sm text-muted-foreground">Distância</div>
-              <div className="text-xl font-bold text-primary">
-                {data.distance ?? "-"}
-              </div>
+              <div className="text-sm text-muted-foreground">Distancia</div>
+              <div className="text-xl font-bold text-primary">{data.distance ?? "-"}</div>
             </div>
           )}
 
-          <Button
-            className="flex-1 max-w-xs"
-            onClick={data.type === "tour" ? undefined : goToRoute}
-          >
+          <Button className="flex-1 max-w-xs" onClick={data.type === "tour" ? undefined : goToRoute}>
             {data.type === "tour" ? (
               <>
                 <Calendar className="w-5 h-5 mr-2" />
