@@ -193,6 +193,90 @@ export const mockedElements: LocativeUnion[] = [
     rating: { value: 4.7, count: 143 },
   },
   {
+    element_id: "15",
+    element_type: "commercial_poi",
+    name: "Fortaleza Exchange Hub",
+    geometry: { type: "Point", coordinates: [-38.4794, -3.7687] },
+    status: "active",
+    media: [
+      {
+        media_id: "15-1",
+        type: "image",
+        url: "https://images.unsplash.com/photo-1554224155-6726b3ff858f",
+        visibility: "public",
+      },
+    ],
+    categories: [
+      { code: "commercial_poi", is_primary: true },
+      { code: "finance", is_primary: false },
+    ],
+    poi_macro_type: "finance",
+    rating: { value: 4.5, count: 89 },
+  },
+  {
+    element_id: "16",
+    element_type: "commercial_poi",
+    name: "Nordeste Business Office",
+    geometry: { type: "Point", coordinates: [-38.4854, -3.7699] },
+    status: "active",
+    media: [
+      {
+        media_id: "16-1",
+        type: "image",
+        url: "https://images.unsplash.com/photo-1497366811353-6870744d04b2",
+        visibility: "public",
+      },
+    ],
+    categories: [
+      { code: "commercial_poi", is_primary: true },
+      { code: "professional_services", is_primary: false },
+    ],
+    poi_macro_type: "professional_services",
+    rating: { value: 4.4, count: 57 },
+  },
+  {
+    element_id: "17",
+    element_type: "commercial_poi",
+    name: "Beach Stay Fortaleza",
+    geometry: { type: "Point", coordinates: [-38.4779, -3.7701] },
+    status: "active",
+    media: [
+      {
+        media_id: "17-1",
+        type: "image",
+        url: "https://images.unsplash.com/photo-1566073771259-6a8506099945",
+        visibility: "public",
+      },
+    ],
+    categories: [
+      { code: "commercial_poi", is_primary: true },
+      { code: "tourism_hospitality", is_primary: false },
+    ],
+    poi_macro_type: "tourism_hospitality",
+    rating: { value: 4.6, count: 173 },
+  },
+  {
+    element_id: "18",
+    element_type: "commercial_poi",
+    name: "AutoFix Mobility Center",
+    geometry: { type: "Point", coordinates: [-38.4862, -3.7718] },
+    status: "active",
+    media: [
+      {
+        media_id: "18-1",
+        type: "image",
+        url: "https://images.unsplash.com/photo-1487754180451-c456f719a1fc",
+        visibility: "public",
+      },
+    ],
+    categories: [
+      { code: "commercial_poi", is_primary: true },
+      { code: "automotive", is_primary: false },
+    ],
+    poi_macro_type: "automotive",
+    rating: { value: 4.3, count: 64 },
+  },
+  {
     element_id: "10",
     element_type: "public_service",
     name: "City Pharmacy Plus",

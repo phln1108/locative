@@ -41,6 +41,7 @@ export default function DetailPage({ data }: Props) {
   const [myRating, setMyRating] = useState<number>(5);
   const [myComment, setMyComment] = useState<string>("");
   const [localReviews, setLocalReviews] = useState<ReviewDetailed[]>([]);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   useEffect(() => {
     if (!api) return;
@@ -76,6 +77,10 @@ export default function DetailPage({ data }: Props) {
     const serverReviews = data.reviewsDetailed ?? [];
     return [...localReviews, ...serverReviews];
   }, [data.reviewsDetailed, localReviews]);
+  const hasMyReview = useMemo(
+    () => localReviews.some((review) => review.user === "Voce"),
+    [localReviews]
+  );
 
   const goToRoute = () => {
     if (!data.coordinates) {
@@ -129,6 +134,7 @@ export default function DetailPage({ data }: Props) {
     });
 
     setLocalReviews(localReviewsService.listByPlace(data.id));
+    setIsReviewModalOpen(false);
   };
 
   return (
@@ -308,11 +314,72 @@ export default function DetailPage({ data }: Props) {
           </Tabs>
         )}
 
-        <div className="space-y-3">
-          <h2 className="text-xl font-semibold">Sua avaliacao</h2>
-          <Card className="p-4 space-y-3">
-            <div className="flex flex-col sm:flex-row gap-3">
-              <div className="w-full sm:w-52">
+        {mergedReviews.length > 0 && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-xl font-semibold">Avaliacoes</h2>
+              <Button variant="outline" onClick={() => setIsReviewModalOpen(true)}>
+                {hasMyReview ? "Editar avaliacao" : "Avaliar"}
+              </Button>
+            </div>
+            {mergedReviews.map((r) => (
+              <Card key={r.id} className="p-4 space-y-2">
+                <div className="flex justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium">{r.user}</span>
+                    <div className="flex items-center gap-0.5">
+                      {[1, 2, 3, 4, 5].map((value) => (
+                        <Star
+                          key={`${r.id}-${value}`}
+                          className={
+                            value <= r.rating
+                              ? "w-4 h-4 fill-yellow-400 text-yellow-400"
+                              : "w-4 h-4 text-muted-foreground"
+                          }
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <span className="text-sm text-muted-foreground">{r.date}</span>
+                </div>
+                <p className="text-sm text-muted-foreground">{r.comment}</p>
+              </Card>
+            ))}
+          </div>
+        )}
+        {mergedReviews.length === 0 && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-xl font-semibold">Avaliacoes</h2>
+              <Button variant="outline" onClick={() => setIsReviewModalOpen(true)}>
+                Avaliar
+              </Button>
+            </div>
+            <Card className="p-4 text-sm text-muted-foreground">
+              Nenhuma avaliacao ainda.
+            </Card>
+          </div>
+        )}
+      </div>
+
+      {isReviewModalOpen && (
+        <div className="fixed inset-0 z-[1200] flex items-end sm:items-center justify-center bg-black/45 p-4">
+          <Card className="w-full max-w-lg p-4 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">
+                {hasMyReview ? "Editar avaliacao" : "Nova avaliacao"}
+              </h3>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setIsReviewModalOpen(false)}
+              >
+                Fechar
+              </Button>
+            </div>
+
+            <div className="space-y-3">
+              <div className="w-full">
                 <label className="text-sm text-muted-foreground">Nota</label>
                 <div className="flex items-center gap-1 mt-2">
                   {[1, 2, 3, 4, 5].map((value) => (
@@ -334,7 +401,8 @@ export default function DetailPage({ data }: Props) {
                   ))}
                 </div>
               </div>
-              <div className="flex-1">
+
+              <div className="w-full">
                 <label className="text-sm text-muted-foreground">Comentario</label>
                 <textarea
                   className="w-full min-h-24 rounded-md border border-input bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -344,31 +412,16 @@ export default function DetailPage({ data }: Props) {
                 />
               </div>
             </div>
-            <div className="flex justify-end">
+
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setIsReviewModalOpen(false)}>
+                Cancelar
+              </Button>
               <Button onClick={saveMyReview}>Salvar avaliacao</Button>
             </div>
           </Card>
         </div>
-
-        {mergedReviews.length > 0 && (
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Avaliacoes</h2>
-            {mergedReviews.map((r) => (
-              <Card key={r.id} className="p-4 space-y-2">
-                <div className="flex justify-between">
-                  <span className="font-medium">{r.user}</span>
-                  <span className="text-sm text-muted-foreground">{r.date}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  {r.rating}
-                </div>
-                <p className="text-sm text-muted-foreground">{r.comment}</p>
-              </Card>
-            ))}
-          </div>
-        )}
-      </div>
+      )}
 
       <div className="fixed bottom-0 left-0 right-0 bg-background border-t p-4 shadow">
         <div className="flex justify-between items-center gap-4 flex-1 container mx-auto">

@@ -152,6 +152,10 @@ const mockOverrides: Record<number, Partial<Place>> = {
   7: { subtitle: "Clinica Veterinaria", distance: "2.3 km" },
   8: { subtitle: "Loja de Roupas", distance: "0.9 km" },
   9: { subtitle: "Bar Artesanal", distance: "1.8 km" },
+  15: { subtitle: "Cambio e Servicos Financeiros", distance: "1.0 km" },
+  16: { subtitle: "Consultoria e Servicos Profissionais", distance: "1.6 km" },
+  17: { subtitle: "Hospedagem e Turismo", distance: "2.1 km" },
+  18: { subtitle: "Automotivo e Mobilidade", distance: "2.7 km" },
   10: { subtitle: "Farmacia", distance: "0.4 km", rating: 4.3, reviews: 76 },
   11: {
     type: "tour",
