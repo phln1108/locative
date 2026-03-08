@@ -13,6 +13,7 @@ import MapControls from "./map-controls";
 import RecenterMap from "./recenter-map";
 import CustomMarker from "./custom-markers";
 import { mockedPlaces } from "@/data/mocked-places";
+import { getCategoryByKey } from "@/data/categories";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import NearbyPlacesCarousel from "../ui/NearbyPlacesCarousel";
 import { Button } from "../ui/button";
@@ -40,13 +41,18 @@ export default function Map() {
     const nearbyPlaces = mockedPlaces.filter(
         (place) => place.coordinates
     );
-    const carouselPlaces = nearbyPlaces.map((place) => ({
-        id: place.id,
-        image: place.images[0],
-        title: place.title,
-        distance: place.distance ?? "Sem distancia",
-        priceLevel: place.priceLevel,
-    }));
+    const carouselPlaces = nearbyPlaces.map((place) => {
+        const category = getCategoryByKey(place.categoryKey);
+        return {
+            id: place.id,
+            image: place.images[0],
+            title: place.title,
+            distance: place.distance ?? "Sem distancia",
+            priceLevel: place.priceLevel,
+            categoryEmoji: category?.emoji,
+            categoryName: category?.label,
+        };
+    });
 
     return (
         <div className="relative h-full w-full">

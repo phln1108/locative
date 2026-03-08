@@ -5,6 +5,8 @@ interface NearbyPlaceCardProps {
   title: string;
   distance: string;
   priceLevel?: 0 | 1 | 2 | 3 | 4;
+  categoryEmoji?: string;
+  categoryName?: string;
   onClick?: () => void;
 }
 
@@ -13,6 +15,8 @@ export default function NearbyPlaceCard({
   title,
   distance,
   priceLevel,
+  categoryEmoji,
+  categoryName,
   onClick,
 }: NearbyPlaceCardProps) {
   const priceLevelLabel =
@@ -36,11 +40,21 @@ export default function NearbyPlaceCard({
         flex
       "
     >
-      <img
-        src={image}
-        alt={title}
-        className="w-24 h-20 object-cover shrink-0"
-      />
+      <div className="relative w-24 h-20 shrink-0">
+        <img
+          src={image}
+          alt={title}
+          className="w-24 h-20 object-cover shrink-0"
+        />
+        {categoryEmoji && (
+          <span
+            title={categoryName ?? "Categoria"}
+            className="absolute top-1 left-1 inline-flex items-center justify-center rounded-md bg-background/90 px-1.5 py-0.5 text-xs shadow-sm"
+          >
+            {categoryEmoji}
+          </span>
+        )}
+      </div>
 
       <div className="p-2 flex-1 flex flex-col justify-center">
         <h4 className="font-medium text-sm truncate text-left text-foreground">

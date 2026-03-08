@@ -62,6 +62,8 @@ const NearbyPlacesPage = () => {
             image={place.images[0]}
             title={place.title}
             subtitle={place.subtitle ?? getCategoryByKey(place.categoryKey)?.label ?? ""}
+            categoryEmoji={getCategoryByKey(place.categoryKey)?.emoji}
+            categoryName={getCategoryByKey(place.categoryKey)?.label}
             distance={place.distance ?? ""}
             rating={place.rating ?? 0}
             priceLevel={place.priceLevel}

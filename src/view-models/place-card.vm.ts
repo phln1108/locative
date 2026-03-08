@@ -3,6 +3,7 @@ export interface PlaceCardVM {
   title: string;
   image: string;
   category?: string;
+  categoryEmoji?: string;
   rating?: number;
   reviews?: number;
   distance?: string;

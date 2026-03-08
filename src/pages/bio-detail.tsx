@@ -10,6 +10,7 @@ import {
   Phone,
   Share2,
   Star,
+  TriangleAlert,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +29,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Place, ReviewDetailed } from "@/models/models";
 import { getCategoryByKey } from "@/data/categories";
 import { localReviewsService } from "@/services/local-reviews.service";
+import { toast } from "react-toastify";
 
 interface Props {
   data: Place;
@@ -42,6 +44,8 @@ export default function DetailPage({ data }: Props) {
   const [myComment, setMyComment] = useState<string>("");
   const [localReviews, setLocalReviews] = useState<ReviewDetailed[]>([]);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [reportDetails, setReportDetails] = useState("");
 
   useEffect(() => {
     if (!api) return;
@@ -135,6 +139,20 @@ export default function DetailPage({ data }: Props) {
 
     setLocalReviews(localReviewsService.listByPlace(data.id));
     setIsReviewModalOpen(false);
+  };
+
+  const handleOpenReportModal = () => {
+    setIsReportModalOpen(true);
+  };
+
+  const handleCancelReport = () => {
+    setIsReportModalOpen(false);
+    setReportDetails("");
+  };
+
+  const handleSaveReport = () => {
+    toast("denuncia enviada com sucesso!", { type: "success" });
+    handleCancelReport();
   };
 
   return (
@@ -345,6 +363,17 @@ export default function DetailPage({ data }: Props) {
                 <p className="text-sm text-muted-foreground">{r.comment}</p>
               </Card>
             ))}
+
+            <div className="flex justify-end pt-1">
+              <Button
+                variant="outline"
+                className="border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
+                onClick={handleOpenReportModal}
+              >
+                <TriangleAlert className="w-4 h-4 mr-2" />
+                Denunciar estabelecimento
+              </Button>
+            </div>
           </div>
         )}
         {mergedReviews.length === 0 && (
@@ -358,6 +387,17 @@ export default function DetailPage({ data }: Props) {
             <Card className="p-4 text-sm text-muted-foreground">
               Nenhuma avaliacao ainda.
             </Card>
+
+            <div className="flex justify-end pt-1">
+              <Button
+                variant="outline"
+                className="border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
+                onClick={handleOpenReportModal}
+              >
+                <TriangleAlert className="w-4 h-4 mr-2" />
+                Denunciar estabelecimento
+              </Button>
+            </div>
           </div>
         )}
       </div>
@@ -418,6 +458,33 @@ export default function DetailPage({ data }: Props) {
                 Cancelar
               </Button>
               <Button onClick={saveMyReview}>Salvar avaliacao</Button>
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {isReportModalOpen && (
+        <div className="fixed inset-0 z-1200 flex items-end sm:items-center justify-center bg-black/45 p-4">
+          <Card className="w-full max-w-lg p-4 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold">Detalhar denuncia</h3>
+              <Button type="button" variant="ghost" onClick={handleCancelReport}>
+                Fechar
+              </Button>
+            </div>
+
+            <textarea
+              className="w-full min-h-28 rounded-md border border-input bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              placeholder="Descreva o motivo da denuncia..."
+              value={reportDetails}
+              onChange={(event) => setReportDetails(event.target.value)}
+            />
+
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={handleCancelReport}>
+                Cancelar
+              </Button>
+              <Button onClick={handleSaveReport}>Salvar denuncia</Button>
             </div>
           </Card>
         </div>

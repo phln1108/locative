@@ -13,15 +13,20 @@ function inferPriceLevelFromPrice(price?: number): 0 | 1 | 2 | 3 | 4 | undefined
 
 export const mockedNearPlaces = mockedPlaces
   .filter((place) => place.type !== "tour")
-  .map((place) => ({
-    id: place.id,
-    image: place.images[0],
-    title: place.title,
-    subtitle: place.subtitle ?? getCategoryByKey(place.categoryKey)?.label ?? "",
-    distance: place.distance ?? "",
-    rating: place.rating ?? 0,
-    priceLevel: place.priceLevel,
-  }));
+  .map((place) => {
+    const category = getCategoryByKey(place.categoryKey);
+    return {
+      id: place.id,
+      image: place.images[0],
+      title: place.title,
+      subtitle: place.subtitle ?? category?.label ?? "",
+      categoryEmoji: category?.emoji,
+      categoryName: category?.label,
+      distance: place.distance ?? "",
+      rating: place.rating ?? 0,
+      priceLevel: place.priceLevel,
+    };
+  });
 
 export const mockedTours = mockedPlaces
   .filter((place) => place.type === "tour")
@@ -42,15 +47,20 @@ export const mockedFavoriteIds: number[] = [1, 3, 5, 11, 14];
 
 export const mockedFavoritePlaces = mockedPlaces
   .filter((place) => mockedFavoriteIds.includes(place.id) && place.type !== "tour")
-  .map((place) => ({
-    id: place.id,
-    image: place.images[0],
-    title: place.title,
-    subtitle: place.subtitle ?? getCategoryByKey(place.categoryKey)?.label ?? "",
-    distance: place.distance ?? "",
-    rating: place.rating ?? 0,
-    priceLevel: place.priceLevel,
-  }));
+  .map((place) => {
+    const category = getCategoryByKey(place.categoryKey);
+    return {
+      id: place.id,
+      image: place.images[0],
+      title: place.title,
+      subtitle: place.subtitle ?? category?.label ?? "",
+      categoryEmoji: category?.emoji,
+      categoryName: category?.label,
+      distance: place.distance ?? "",
+      rating: place.rating ?? 0,
+      priceLevel: place.priceLevel,
+    };
+  });
 
 export const mockedFavoriteTours = mockedPlaces
   .filter((place) => mockedFavoriteIds.includes(place.id) && place.type === "tour")

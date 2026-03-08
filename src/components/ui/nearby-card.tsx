@@ -7,6 +7,8 @@ interface NearbyCardProps {
   image: string;
   title: string;
   subtitle: string;
+  categoryEmoji?: string;
+  categoryName?: string;
   distance: string;
   rating: number;
   priceLevel?: 0 | 1 | 2 | 3 | 4;
@@ -18,6 +20,8 @@ export default function NearbyCard({
   image,
   title,
   subtitle,
+  categoryEmoji,
+  categoryName,
   distance,
   rating,
   priceLevel,
@@ -46,6 +50,15 @@ export default function NearbyCard({
           alt={title}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
         />
+
+        {categoryEmoji && (
+          <span
+            title={categoryName ?? subtitle}
+            className="absolute top-3 left-3 inline-flex items-center justify-center rounded-md bg-background/95 px-2 py-1 text-sm shadow-sm"
+          >
+            {categoryEmoji}
+          </span>
+        )}
 
         <div className="absolute inset-0 bg-linear-to-t from-success to-success/70 opacity-20 group-hover:opacity-30 transition-opacity" />
 

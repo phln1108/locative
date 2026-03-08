@@ -18,6 +18,7 @@ export default function PlaceCard({
   image,
   title,
   category,
+  categoryEmoji,
   rating = 0,
   reviews,
   distance,
@@ -46,6 +47,14 @@ export default function PlaceCard({
             alt={title}
             className="w-full h-full object-cover"
           />
+          {categoryEmoji && (
+            <span
+              title={category ?? "Categoria"}
+              className="absolute top-2 left-2 inline-flex items-center justify-center rounded-md bg-background/90 px-2 py-1 text-sm shadow-sm"
+            >
+              {categoryEmoji}
+            </span>
+          )}
         </div>
 
         <CardContent className="flex-1 p-4 sm:p-6">
@@ -126,11 +135,7 @@ export default function PlaceCard({
               </Button>
 
               {phone && (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  asChild
-                >
+                <Button size="sm" variant="outline" asChild>
                   <a href={`tel:${phone}`}>
                     <Phone className="w-4 h-4 mr-1" />
                     Ligar
@@ -139,16 +144,8 @@ export default function PlaceCard({
               )}
 
               {website && (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  asChild
-                >
-                  <a
-                    href={website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                <Button size="sm" variant="outline" asChild>
+                  <a href={website} target="_blank" rel="noopener noreferrer">
                     <Globe className="w-4 h-4 mr-1" />
                     Site
                   </a>
