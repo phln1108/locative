@@ -1,4 +1,4 @@
-import type { LocativeUnion } from "@/domain/models/locative-union";
+﻿import type { LocativeUnion } from "@/domain/models/locative-union";
 
 export const mockedElements: LocativeUnion[] = [
   {
@@ -6,7 +6,7 @@ export const mockedElements: LocativeUnion[] = [
     element_type: "commercial_poi",
     name: "Trattoria Bella",
     description: "Restaurante italiano tradicional.",
-    geometry: { type: "Point", coordinates: [-38.4819, -3.7685] },
+    geometry: { type: "Point", coordinates: [-38.5097, -3.7314] },
     status: "active",
     interaction_potential: ["qr"],
     media: [
@@ -29,7 +29,7 @@ export const mockedElements: LocativeUnion[] = [
     element_id: "2",
     element_type: "commercial_poi",
     name: "Blue Bottle Coffee",
-    geometry: { type: "Point", coordinates: [-38.4814, -3.7696] },
+    geometry: { type: "Point", coordinates: [-38.5092, -3.7325] },
     status: "active",
     media: [
       {
@@ -51,7 +51,7 @@ export const mockedElements: LocativeUnion[] = [
     element_id: "3",
     element_type: "commercial_poi",
     name: "FitLife Gym",
-    geometry: { type: "Point", coordinates: [-38.483, -3.7702] },
+    geometry: { type: "Point", coordinates: [-38.5108, -3.7331] },
     status: "active",
     media: [
       {
@@ -73,7 +73,7 @@ export const mockedElements: LocativeUnion[] = [
     element_id: "4",
     element_type: "commercial_poi",
     name: "Modern Art Gallery",
-    geometry: { type: "Point", coordinates: [-38.4834, -3.7678] },
+    geometry: { type: "Point", coordinates: [-38.5112, -3.7307] },
     status: "active",
     media: [
       {
@@ -95,7 +95,7 @@ export const mockedElements: LocativeUnion[] = [
     element_id: "5",
     element_type: "commercial_poi",
     name: "Tech Store Premium",
-    geometry: { type: "Point", coordinates: [-38.4808, -3.7699] },
+    geometry: { type: "Point", coordinates: [-38.5086, -3.7328] },
     status: "active",
     media: [
       {
@@ -117,7 +117,7 @@ export const mockedElements: LocativeUnion[] = [
     element_id: "6",
     element_type: "commercial_poi",
     name: "Indie Bookshop",
-    geometry: { type: "Point", coordinates: [-38.4825, -3.7708] },
+    geometry: { type: "Point", coordinates: [-38.5103, -3.7337] },
     status: "active",
     media: [
       {
@@ -139,7 +139,7 @@ export const mockedElements: LocativeUnion[] = [
     element_id: "7",
     element_type: "commercial_poi",
     name: "Pet Care Clinic",
-    geometry: { type: "Point", coordinates: [-38.484, -3.7712] },
+    geometry: { type: "Point", coordinates: [-38.5118, -3.7341] },
     status: "active",
     media: [
       {
@@ -161,7 +161,7 @@ export const mockedElements: LocativeUnion[] = [
     element_id: "8",
     element_type: "commercial_poi",
     name: "Fashion Forward",
-    geometry: { type: "Point", coordinates: [-38.4832, -3.7689] },
+    geometry: { type: "Point", coordinates: [-38.5110, -3.7318] },
     status: "active",
     media: [
       {
@@ -183,7 +183,7 @@ export const mockedElements: LocativeUnion[] = [
     element_id: "9",
     element_type: "commercial_poi",
     name: "Craft Beer Bar",
-    geometry: { type: "Point", coordinates: [-38.481, -3.7675] },
+    geometry: { type: "Point", coordinates: [-38.5088, -3.7304] },
     status: "active",
     media: [
       {
@@ -205,7 +205,7 @@ export const mockedElements: LocativeUnion[] = [
     element_id: "15",
     element_type: "commercial_poi",
     name: "Fortaleza Exchange Hub",
-    geometry: { type: "Point", coordinates: [-38.4794, -3.7687] },
+    geometry: { type: "Point", coordinates: [-38.5072, -3.7316] },
     status: "active",
     media: [
       {
@@ -227,7 +227,7 @@ export const mockedElements: LocativeUnion[] = [
     element_id: "16",
     element_type: "commercial_poi",
     name: "Nordeste Business Office",
-    geometry: { type: "Point", coordinates: [-38.4854, -3.7699] },
+    geometry: { type: "Point", coordinates: [-38.5132, -3.7328] },
     status: "active",
     media: [
       {
@@ -249,7 +249,7 @@ export const mockedElements: LocativeUnion[] = [
     element_id: "17",
     element_type: "commercial_poi",
     name: "Beach Stay Fortaleza",
-    geometry: { type: "Point", coordinates: [-38.4779, -3.7701] },
+    geometry: { type: "Point", coordinates: [-38.5057, -3.7330] },
     status: "active",
     media: [
       {
@@ -271,7 +271,7 @@ export const mockedElements: LocativeUnion[] = [
     element_id: "18",
     element_type: "commercial_poi",
     name: "AutoFix Mobility Center",
-    geometry: { type: "Point", coordinates: [-38.4862, -3.7718] },
+    geometry: { type: "Point", coordinates: [-38.5140, -3.7347] },
     status: "active",
     media: [
       {
@@ -293,7 +293,7 @@ export const mockedElements: LocativeUnion[] = [
     element_id: "10",
     element_type: "public_service",
     name: "City Pharmacy Plus",
-    geometry: { type: "Point", coordinates: [-38.4837, -3.7693] },
+    geometry: { type: "Point", coordinates: [-38.5115, -3.7322] },
     status: "active",
     media: [
       {
@@ -314,7 +314,7 @@ export const mockedElements: LocativeUnion[] = [
     element_id: "11",
     element_type: "situated_event",
     name: "Dunas e Lagoas",
-    geometry: { type: "Point", coordinates: [-38.4805, -3.7705] },
+    geometry: { type: "Point", coordinates: [-38.5083, -3.7334] },
     status: "active",
     media: [
       {
@@ -337,7 +337,7 @@ export const mockedElements: LocativeUnion[] = [
     element_id: "12",
     element_type: "situated_event",
     name: "Centro Historico",
-    geometry: { type: "Point", coordinates: [-38.4842, -3.7682] },
+    geometry: { type: "Point", coordinates: [-38.5120, -3.7311] },
     status: "active",
     media: [
       {
@@ -360,7 +360,7 @@ export const mockedElements: LocativeUnion[] = [
     element_id: "13",
     element_type: "situated_event",
     name: "Gastronomia Cearense",
-    geometry: { type: "Point", coordinates: [-38.4828, -3.7715] },
+    geometry: { type: "Point", coordinates: [-38.5106, -3.7344] },
     status: "active",
     media: [
       {
@@ -383,7 +383,7 @@ export const mockedElements: LocativeUnion[] = [
     element_id: "14",
     element_type: "natural_element",
     name: "Praias Urbanas",
-    geometry: { type: "Point", coordinates: [-38.4802, -3.7679] },
+    geometry: { type: "Point", coordinates: [-38.5080, -3.7308] },
     status: "active",
     media: [
       {
@@ -397,3 +397,4 @@ export const mockedElements: LocativeUnion[] = [
     natural_kind: "beach",
   },
 ];
+

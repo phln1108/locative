@@ -6,6 +6,7 @@ import type { PlaceCardVM } from "@/view-models/place-card.vm";
 function mapPlaceToCardVM(place: Place): PlaceCardVM {
   const categoryLabel = getCategoryByKey(place.categoryKey)?.label ?? "Sem categoria";
   const categoryEmoji = getCategoryByKey(place.categoryKey)?.emoji;
+  const categoryColor = getCategoryByKey(place.categoryKey)?.color;
   const address = place.address
     ? `${place.address.street}, ${place.address.number} - ${place.address.neighborhood}`
     : "Endereco indisponivel";
@@ -16,6 +17,7 @@ function mapPlaceToCardVM(place: Place): PlaceCardVM {
     image: place.images[0] ?? "",
     category: place.subtitle ?? categoryLabel,
     categoryEmoji,
+    categoryColor,
     rating: place.rating ?? 0,
     reviews: place.reviews ?? 0,
     distance: place.distance ?? "N/A",

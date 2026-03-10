@@ -10,7 +10,7 @@ import {
 
 type Coordinates = [number, number];
 
-const FALLBACK_POSITION: Coordinates = [-3.769070523446473, -38.48214944213391];
+const FALLBACK_POSITION: Coordinates = [-3.731922144804193, -38.5099001755272];
 
 interface GeolocationContextType {
   userPosition: Coordinates | null;

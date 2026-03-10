@@ -19,6 +19,7 @@ export default function PlaceCard({
   title,
   category,
   categoryEmoji,
+  categoryColor,
   rating = 0,
   reviews,
   distance,
@@ -30,6 +31,25 @@ export default function PlaceCard({
   website,
   onClick,
 }: PlaceCardVM & { onClick?: () => void }) {
+  const getBadgeBackgroundColor = (color?: string) => {
+    if (!color) return "rgb(255,248,240)";
+
+    const rgbaMatch = color.match(
+      /^rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?\s*\)$/i
+    );
+
+    if (!rgbaMatch) return color;
+
+    const r = Number(rgbaMatch[1]);
+    const g = Number(rgbaMatch[2]);
+    const b = Number(rgbaMatch[3]);
+    const whitenFactor = 0.45;
+    const toCream = (channel: number) =>
+      Math.round(channel * (1 - whitenFactor) + 255 * whitenFactor);
+
+    return `rgb(${toCream(r)}, ${toCream(g)}, ${toCream(b)})`;
+  };
+
   const priceLevelLabel =
     typeof priceLevel === "number" && priceLevel > 0
       ? "$".repeat(priceLevel)
@@ -50,7 +70,8 @@ export default function PlaceCard({
           {categoryEmoji && (
             <span
               title={category ?? "Categoria"}
-              className="absolute top-2 left-2 inline-flex items-center justify-center rounded-md bg-background/90 px-2 py-1 text-sm shadow-sm"
+              style={{ backgroundColor: getBadgeBackgroundColor(categoryColor) }}
+              className="absolute top-2 left-2 inline-flex items-center justify-center rounded-md px-2 py-1 text-sm shadow-sm"
             >
               {categoryEmoji}
             </span>

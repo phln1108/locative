@@ -4,6 +4,7 @@ export interface PlaceCardVM {
   image: string;
   category?: string;
   categoryEmoji?: string;
+  categoryColor?: string;
   rating?: number;
   reviews?: number;
   distance?: string;

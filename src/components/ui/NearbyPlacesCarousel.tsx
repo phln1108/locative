@@ -8,6 +8,7 @@ interface NearbyPlace {
   priceLevel?: 0 | 1 | 2 | 3 | 4;
   categoryEmoji?: string;
   categoryName?: string;
+  categoryColor?: string;
 }
 
 interface NearbyPlacesCarouselProps {
@@ -38,6 +39,7 @@ export default function NearbyPlacesCarousel({
               priceLevel={place.priceLevel}
               categoryEmoji={place.categoryEmoji}
               categoryName={place.categoryName}
+              categoryColor={place.categoryColor}
               onClick={() => onSelect?.(place.id)}
             />
           ))}

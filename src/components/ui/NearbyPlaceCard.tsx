@@ -7,6 +7,7 @@ interface NearbyPlaceCardProps {
   priceLevel?: 0 | 1 | 2 | 3 | 4;
   categoryEmoji?: string;
   categoryName?: string;
+  categoryColor?: string;
   onClick?: () => void;
 }
 
@@ -17,8 +18,28 @@ export default function NearbyPlaceCard({
   priceLevel,
   categoryEmoji,
   categoryName,
+  categoryColor,
   onClick,
 }: NearbyPlaceCardProps) {
+  const getBadgeBackgroundColor = (color?: string) => {
+    if (!color) return "rgb(255,248,240)";
+
+    const rgbaMatch = color.match(
+      /^rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?\s*\)$/i
+    );
+
+    if (!rgbaMatch) return color;
+
+    const r = Number(rgbaMatch[1]);
+    const g = Number(rgbaMatch[2]);
+    const b = Number(rgbaMatch[3]);
+    const whitenFactor = 0.45;
+    const toCream = (channel: number) =>
+      Math.round(channel * (1 - whitenFactor) + 255 * whitenFactor);
+
+    return `rgb(${toCream(r)}, ${toCream(g)}, ${toCream(b)})`;
+  };
+
   const priceLevelLabel =
     typeof priceLevel === "number" && priceLevel > 0
       ? "$".repeat(priceLevel)
@@ -49,7 +70,8 @@ export default function NearbyPlaceCard({
         {categoryEmoji && (
           <span
             title={categoryName ?? "Categoria"}
-            className="absolute top-1 left-1 inline-flex items-center justify-center rounded-md bg-background/90 px-1.5 py-0.5 text-xs shadow-sm"
+            style={{ backgroundColor: getBadgeBackgroundColor(categoryColor) }}
+            className="absolute top-1 left-1 inline-flex items-center justify-center rounded-md px-1.5 py-0.5 text-xs shadow-sm"
           >
             {categoryEmoji}
           </span>

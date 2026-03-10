@@ -51,6 +51,7 @@ export default function Map() {
             priceLevel: place.priceLevel,
             categoryEmoji: category?.emoji,
             categoryName: category?.label,
+            categoryColor: category?.color,
         };
     });
 
