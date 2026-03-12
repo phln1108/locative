@@ -61,13 +61,18 @@ function sanitizeResponseHeaders(headers) {
 
 export default async function handler(req, res) {
   const allowOrigin = req.headers.origin || "*";
+  const requestedHeaders = req.headers["access-control-request-headers"];
+  const requestedMethod = req.headers["access-control-request-method"];
+
   res.setHeader("Access-Control-Allow-Origin", allowOrigin);
+  res.setHeader("Vary", "Origin, Access-Control-Request-Headers, Access-Control-Request-Method");
   res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Headers", requestedHeaders || "*");
   res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, X-Requested-With"
+    "Access-Control-Allow-Methods",
+    requestedMethod || "GET,POST,PUT,PATCH,DELETE,OPTIONS"
   );
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+  res.setHeader("Access-Control-Max-Age", "86400");
 
   if (req.method === "OPTIONS") {
     res.status(204).end();
