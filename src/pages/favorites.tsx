@@ -1,14 +1,76 @@
-import { ArrowLeft, Heart } from "lucide-react";
+﻿import { ArrowLeft, Heart } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/ui/section-header";
 import NearbyCard from "@/components/ui/nearby-card";
 import { TourCard } from "@/components/ui/tour-card";
-import { mockedFavoritePlaces, mockedFavoriteTours } from "@/data/mocked-places";
+import { placeService } from "@/services/place-service";
+import type { Place } from "@/models/models";
+import { getCategoryByKey } from "@/data/categories";
+import { useAuth } from "@/providers/auth-provider";
 
 export default function FavoritesPage() {
   const navigate = useNavigate();
-  const totalFavorites = mockedFavoritePlaces.length + mockedFavoriteTours.length;
+  const { isAuthenticated } = useAuth();
+  const [favorites, setFavorites] = useState<Place[]>([]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setFavorites([]);
+      return;
+    }
+
+    let cancelled = false;
+
+    const load = async () => {
+      try {
+        const response = await placeService.listFavorites();
+        if (!cancelled) {
+          setFavorites(response);
+        }
+      } catch {
+        if (!cancelled) {
+          setFavorites([]);
+        }
+      }
+    };
+
+    void load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isAuthenticated]);
+
+  if (!isAuthenticated) {
+    return (
+      <main className="w-full">
+        <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-6">
+          <div className="rounded-xl border bg-card p-8 text-center">
+            <h2 className="text-lg font-semibold">Entre para ver seus favoritos</h2>
+            <p className="text-sm text-muted-foreground mt-2">
+              Esta funcionalidade esta disponivel apenas para usuarios autenticados.
+            </p>
+            <Button className="mt-4" onClick={() => navigate("/login")}>
+              Fazer login
+            </Button>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  const favoritePlaces = useMemo(
+    () => favorites.filter((item) => item.type !== "tour"),
+    [favorites]
+  );
+  const favoriteTours = useMemo(
+    () => favorites.filter((item) => item.type === "tour"),
+    [favorites]
+  );
+
+  const totalFavorites = favoritePlaces.length + favoriteTours.length;
 
   return (
     <main className="w-full">
@@ -28,9 +90,7 @@ export default function FavoritesPage() {
               <Heart className="w-5 h-5 text-rose-500" />
               Meus Favoritos
             </h1>
-            <p className="text-sm text-muted-foreground">
-              {totalFavorites} itens salvos
-            </p>
+            <p className="text-sm text-muted-foreground">{totalFavorites} itens salvos</p>
           </div>
         </div>
 
@@ -46,7 +106,7 @@ export default function FavoritesPage() {
           </div>
         )}
 
-        {mockedFavoritePlaces.length > 0 && (
+        {favoritePlaces.length > 0 && (
           <section className="space-y-4">
             <SectionHeader
               title="Lugares Favoritos"
@@ -54,10 +114,18 @@ export default function FavoritesPage() {
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {mockedFavoritePlaces.map((place) => (
+              {favoritePlaces.map((place) => (
                 <NearbyCard
                   key={place.id}
-                  {...place}
+                  image={place.images[0]}
+                  title={place.title}
+                  subtitle={place.subtitle ?? getCategoryByKey(place.categoryKey)?.label ?? ""}
+                  categoryEmoji={getCategoryByKey(place.categoryKey)?.emoji}
+                  categoryName={getCategoryByKey(place.categoryKey)?.label}
+                  categoryColor={getCategoryByKey(place.categoryKey)?.color}
+                  distance={place.distance ?? ""}
+                  rating={place.rating ?? 0}
+                  priceLevel={place.priceLevel}
                   variant="grid"
                   onClick={() => navigate(`/bio/${place.id}`)}
                 />
@@ -66,18 +134,24 @@ export default function FavoritesPage() {
           </section>
         )}
 
-        {mockedFavoriteTours.length > 0 && (
+        {favoriteTours.length > 0 && (
           <section className="space-y-4">
-            <SectionHeader
-              title="Tours Favoritos"
-              description="Experiencias que voce quer fazer"
-            />
+            <SectionHeader title="Tours Favoritos" description="Experiencias que você quer fazer" />
 
             <div className="flex gap-4 pb-4 overflow-x-auto scrollbar-hide">
-              {mockedFavoriteTours.map((tour) => (
+              {favoriteTours.map((tour) => (
                 <TourCard
                   key={tour.id}
-                  {...tour}
+                  image={tour.images[0]}
+                  title={tour.title}
+                  price={tour.price ?? 0}
+                  rating={tour.rating ?? 0}
+                  reviews={tour.reviews ?? 0}
+                  priceLevel={tour.priceLevel}
+                  duration={tour.duration ?? ""}
+                  highlight={
+                    tour.badges?.some((badge) => badge.label === "Mais vendido") ?? false
+                  }
                   onClick={() => navigate(`/bio/${tour.id}`)}
                 />
               ))}

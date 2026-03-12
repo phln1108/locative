@@ -1,0 +1,11 @@
+{
+    "nome": "Consultório odontológico Dra. Lana Pessoa",
+    "endereco": "R. Costa Barros 1659, Aldeota, Fortaleza, CE, 60160-281, BR",
+    "categoria": "pois_privados_saude",
+    "coordenada_geografica": {
+        "latitude": -3.73225,
+        "longitude": -38.51021
+    },
+    "rating": 0,
+    "indentado": []
+}

@@ -5,7 +5,7 @@ interface Props {
 }
 
 export default function NearbyHeader({ title, subtitle, total }: Props) {
-  const parsedSubtitle = subtitle || `${total} lugares encontrados perto de voce`;
+  const parsedSubtitle = subtitle || `${total} ${total !== 1 ? "lugares encontrados" : "lugar encontrado"} perto de você`;
 
   return (
     <div className="flex items-center justify-between">

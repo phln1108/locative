@@ -9,7 +9,7 @@ function mapPlaceToCardVM(place: Place): PlaceCardVM {
   const categoryColor = getCategoryByKey(place.categoryKey)?.color;
   const address = place.address
     ? `${place.address.street}, ${place.address.number} - ${place.address.neighborhood}`
-    : "Endereco indisponivel";
+    : "Endereço indisponivel";
 
   return {
     id: place.id,
@@ -30,6 +30,8 @@ function mapPlaceToCardVM(place: Place): PlaceCardVM {
     sponsored: false,
     verified: (place.reviews ?? 0) > 100,
     type: place.type,
+    lat: place.coordinates?.lat,
+    lng: place.coordinates?.lng,
   };
 }
 
@@ -54,8 +56,8 @@ export function mapCategoryToCategoryCardsPageVM(
       actionLabel: "Ver Todas as Categorias",
     },
     nearby: {
-      title: "Servicos Proximos",
-      subtitle: `${cards.length} lugares encontrados perto de voce`,
+      title: "Servicos Próximos",
+      subtitle: `${cards.length} ${cards.length !== 1 ? "lugares encontrados" : "lugar encontrado"}  perto de você`,
       total: cards.length,
     },
     places: cards,

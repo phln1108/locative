@@ -1,15 +1,59 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { mockedPlaces } from "@/data/mocked-places";
+import CategoryImage from "@/components/ui/category-image";
 import { localReviewsService } from "@/services/local-reviews.service";
+import { usePlaces } from "@/hooks/use-places";
+import { useAuth } from "@/providers/auth-provider";
+import { getCategoryByKey } from "@/data/categories";
 
 export default function ReviewsPage() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const { places } = usePlaces();
+  const [reviews, setReviews] = useState<Awaited<ReturnType<typeof localReviewsService.listMine>>>([]);
 
-  const reviews = useMemo(() => localReviewsService.listMine(), []);
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setReviews([]);
+      return;
+    }
+
+    let cancelled = false;
+
+    const load = async () => {
+      const data = await localReviewsService.listMine();
+      if (!cancelled) {
+        setReviews(data);
+      }
+    };
+
+    void load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isAuthenticated]);
+
+  if (!isAuthenticated) {
+    return (
+      <main className="w-full">
+        <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-6">
+          <Card className="p-6 text-center">
+            <h2 className="text-lg font-semibold">Entre para ver suas avaliacoes</h2>
+            <p className="text-sm text-muted-foreground mt-2">
+              As avaliacoes sao vinculadas ao usuario autenticado.
+            </p>
+            <Button className="mt-4" onClick={() => navigate("/login")}>
+              Fazer login
+            </Button>
+          </Card>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="w-full">
@@ -27,7 +71,7 @@ export default function ReviewsPage() {
           <div className="flex-1">
             <h1 className="text-left text-xl font-semibold">Avaliacoes</h1>
             <p className="text-sm text-muted-foreground">
-              {reviews.length} avaliacao(oes) feita(s) por voce
+              {reviews.length} avaliacao(oes) feita(s) por você
             </p>
           </div>
         </div>
@@ -45,19 +89,22 @@ export default function ReviewsPage() {
         )}
 
         {reviews.map((review) => {
-          const place = mockedPlaces.find((item) => item.id === review.placeId);
+          const place = places.find((item) => item.id === review.placeId);
+          const category = place?.categoryKey
+            ? getCategoryByKey(place.categoryKey)
+            : undefined;
 
           return (
             <Card key={review.id} className="overflow-hidden py-0">
               <div className="flex flex-col sm:flex-row">
                 <div className="relative w-full sm:w-40 h-40 sm:h-auto">
-                  <img
-                    src={
-                      place?.images?.[0] ??
-                      "https://images.unsplash.com/photo-1469474968028-56623f02e42e"
-                    }
+                  <CategoryImage
+                    src={place?.images?.[0]}
                     alt={place?.title ?? "Estabelecimento"}
                     className="w-full h-full object-cover"
+                    fallbackClassName="w-full h-full"
+                    categoryEmoji={category?.emoji}
+                    categoryColor={category?.color}
                   />
                 </div>
 
@@ -85,11 +132,7 @@ export default function ReviewsPage() {
 
                   {place && (
                     <div className="flex justify-end">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => navigate(`/bio/${place.id}`)}
-                      >
+                      <Button variant="outline" size="sm" onClick={() => navigate(`/bio/${place.id}`)}>
                         Ver estabelecimento
                       </Button>
                     </div>

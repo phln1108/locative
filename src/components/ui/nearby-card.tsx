@@ -2,6 +2,7 @@ import { Navigation, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "./badge";
 import { Card } from "./card";
+import CategoryImage from "./category-image";
 
 interface NearbyCardProps {
   image: string;
@@ -66,10 +67,13 @@ export default function NearbyCard({
     >
       {/* Imagem */}
       <div className="relative h-36 overflow-hidden">
-        <img
+        <CategoryImage
           src={image}
           alt={title}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+          fallbackClassName="w-full h-full"
+          categoryEmoji={categoryEmoji}
+          categoryColor={categoryColor}
         />
 
         {categoryEmoji && (

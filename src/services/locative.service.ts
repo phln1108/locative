@@ -6,6 +6,7 @@ import type {
   FavoriteInputDTO,
   LoginInputDTO,
   LoginOutputDTO,
+  PoiDetailInputDTO,
   SearchInputDTO,
 } from "@/types/locative-query";
 
@@ -48,8 +49,14 @@ export const locativeService = {
     return normalizePoiListResponse(response);
   },
 
-  async getPoiDetail(poiId: number) {
-    return locativeApi.detalharPoi(poiId);
+  async getPoiDetail(poiId: number, position?: { latitude?: number; longitude?: number }) {
+    const payload: PoiDetailInputDTO = {
+      poi_id: poiId,
+      latitude: position?.latitude,
+      longitude: position?.longitude,
+    };
+
+    return locativeApi.detalharPoi(payload);
   },
 
   async search(payload: SearchInputDTO) {

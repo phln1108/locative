@@ -17,7 +17,7 @@ export default function MapControls({ getLocation }: Props) {
     };
 
     return (
-        <div className="absolute bottom-6 left-6 flex flex-col gap-2 z-[1000]">
+        <div className="absolute bottom-6 left-6 flex flex-col gap-2 z-1000">
             <Button size="icon" variant="secondary" onClick={() => map.zoomIn()}>
                 <Plus size={18} />
             </Button>

@@ -1,0 +1,278 @@
+[
+    {
+        "id": 2,
+        "nome_local": "CeArt – Central de Artesanato do Ceará (Galeria Mestre Noza)",
+        "categoria": "Servico publico",
+        "avaliacao": 0,
+        "imagem": "https://www.lojaceart.online/",
+        "distancia_metros": 30.9,
+        "coordenada_geografica": {
+            "latitude": -3.7322,
+            "longitude": -38.5099
+        }
+    },
+    {
+        "id": 5,
+        "nome_local": "Cafeteria Santa Clara – Vagão da Praça Luíza Távora",
+        "categoria": "Alimentacao e bebidas",
+        "avaliacao": 0,
+        "imagem": "https://www.visiter-fortaleza.com/pt/activites/cafeteria-santa-clara",
+        "distancia_metros": 31.39,
+        "coordenada_geografica": {
+            "latitude": -3.7322,
+            "longitude": -38.50995
+        }
+    },
+    {
+        "id": 3,
+        "nome_local": "Bicicletar – Estação Praça Luíza Távora",
+        "categoria": "Transporte",
+        "avaliacao": 0,
+        "imagem": "https://www.bicicletar.com.br/mapaestacao.aspx",
+        "distancia_metros": 38.1,
+        "coordenada_geografica": {
+            "latitude": -3.73225,
+            "longitude": -38.51
+        }
+    },
+    {
+        "id": 7,
+        "nome_local": "Farmácias Pague Menos – Av. Santos Dumont, 1256",
+        "categoria": "Comercio e varejo",
+        "avaliacao": 0,
+        "imagem": "https://www.guiamais.com.br/fortaleza-ce/produtos-farmaceuticos-e-cosmeticos/farmacias-e-drogarias/413448-3/farmacia-pague-menos",
+        "distancia_metros": 50.11,
+        "coordenada_geografica": {
+            "latitude": -3.73225,
+            "longitude": -38.51021
+        }
+    },
+    {
+        "id": 8,
+        "nome_local": "Ótica – Cruz de Ouro Center Um (Center Um Shopping)",
+        "categoria": "Comercio e varejo",
+        "avaliacao": 0,
+        "imagem": "https://eguias.net/empresa/cruz-de-ouro-center-i/fortaleza/ce/1487501",
+        "distancia_metros": 50.11,
+        "coordenada_geografica": {
+            "latitude": -3.73225,
+            "longitude": -38.51021
+        }
+    },
+    {
+        "id": 9,
+        "nome_local": "Shopping Del Paseo",
+        "categoria": "Comercio e varejo",
+        "avaliacao": 0,
+        "imagem": "https://shoppingdelpaseo.com.br/del-paseo/",
+        "distancia_metros": 50.11,
+        "coordenada_geografica": {
+            "latitude": -3.73225,
+            "longitude": -38.51021
+        }
+    },
+    {
+        "id": 1,
+        "nome_local": "Praça Luíza Távora",
+        "categoria": "Lugar publico",
+        "avaliacao": 0,
+        "imagem": "https://www.sps.ce.gov.br/2023/01/26/praca-luiza-tavora-e-espaco-de-lazer-para-todas-as-idades/",
+        "distancia_metros": 50.11,
+        "coordenada_geografica": {
+            "latitude": -3.73225,
+            "longitude": -38.51021
+        }
+    },
+    {
+        "id": 4,
+        "nome_local": "Wi‑For – Wi‑Fi público na Praça Luíza Távora",
+        "categoria": "Infraestrutura urbana",
+        "avaliacao": 0,
+        "imagem": "https://wifor.fortaleza.ce.gov.br/",
+        "distancia_metros": 50.11,
+        "coordenada_geografica": {
+            "latitude": -3.73225,
+            "longitude": -38.51021
+        }
+    },
+    {
+        "id": 6,
+        "nome_local": "Drogasil – Av. Santos Dumont, 2390 (Aldeota)",
+        "categoria": "Comercio e varejo",
+        "avaliacao": 0,
+        "imagem": "https://www.benditoguia.com.br/empresa/drogasil-aldeota-fortaleza",
+        "distancia_metros": 50.11,
+        "coordenada_geografica": {
+            "latitude": -3.73225,
+            "longitude": -38.51021
+        }
+    },
+    {
+        "id": 19,
+        "nome_local": "Consultório odontológico Dra. Lana Pessoa",
+        "categoria": "Saude",
+        "avaliacao": 0,
+        "imagem": "https://lh3.googleusercontent.com/gps-cs-s/AHVAweqxVz13KTFwkNIuh7vdoe4SGUUCHQfewpHceE7vzsH0JQRE1RRGTvGQwzZ8FMYcQe4N3tLcmCvpmOq4GkMMe8JrtNOUeyOOXQQdW3ZofmqAa5mo837gvH32BdPhhzj1p0Ug267G13bOMRU=w408-h544-k-no",
+        "distancia_metros": 50.11,
+        "coordenada_geografica": {
+            "latitude": -3.73225,
+            "longitude": -38.51021
+        }
+    },
+    {
+        "id": 20,
+        "nome_local": "Nyrra Center",
+        "categoria": "Shopping center",
+        "avaliacao": 0,
+        "imagem": "",
+        "distancia_metros": 50.11,
+        "coordenada_geografica": {
+            "latitude": -3.73225,
+            "longitude": -38.51021
+        }
+    },
+    {
+        "id": 21,
+        "nome_local": "Banca Santa Rita",
+        "categoria": "Comercio e varejo",
+        "avaliacao": 0,
+        "imagem": "",
+        "distancia_metros": 50.11,
+        "coordenada_geografica": {
+            "latitude": -3.73225,
+            "longitude": -38.51021
+        }
+    },
+    {
+        "id": 22,
+        "nome_local": "Parada/ponto  de ônibus",
+        "categoria": "Infraestrutura urbana",
+        "avaliacao": 0,
+        "imagem": "",
+        "distancia_metros": 50.11,
+        "coordenada_geografica": {
+            "latitude": -3.73225,
+            "longitude": -38.51021
+        }
+    },
+    {
+        "id": 11,
+        "nome_local": "Posto Jamaica | Shell",
+        "categoria": "Automotivo e mobilidade privada",
+        "avaliacao": 0,
+        "imagem": "https://lh3.googleusercontent.com/gps-proxy/ALd4DhG9us2nj2nNqJEpUO2cSTnVa_RwK1WwGYOu9HyFc-UZz5ZBErjHxQZwBJXIbIV2TgxmnPEwfWLnxaFI-1tvN9Q7R4O1eAxzGvHUSLf8pwJoy3bsnj4VoqROl9lTkrHwhQV3Ndbc4UFyMpGopyRPIF0CP2_MILR9enRzjr8jPkCLjLtfSYLxdc897OuxMM0Z3rqm_No=w408-h306-k-no",
+        "distancia_metros": 50.11,
+        "coordenada_geografica": {
+            "latitude": -3.73225,
+            "longitude": -38.51021
+        }
+    },
+    {
+        "id": 12,
+        "nome_local": "Coco Bambu – Dom Pastel (Carlos Vasconcelos, 996)",
+        "categoria": "Alimentacao e bebidas",
+        "avaliacao": 0,
+        "imagem": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/86/7a/2d/coco-bambu-dom-pastel.jpg",
+        "distancia_metros": 50.11,
+        "coordenada_geografica": {
+            "latitude": -3.73225,
+            "longitude": -38.51021
+        }
+    },
+    {
+        "id": 13,
+        "nome_local": "Óculos em Foco – Aldeota (Av. Santos Dumont, 3060 – loja 10)",
+        "categoria": "Comercio e varejo",
+        "avaliacao": 0,
+        "imagem": "https://brasillocais.com/ceara/oculos-em-foco-aldeota-1387659",
+        "distancia_metros": 50.11,
+        "coordenada_geografica": {
+            "latitude": -3.73225,
+            "longitude": -38.51021
+        }
+    },
+    {
+        "id": 14,
+        "nome_local": "BR Super Carga – Eletroposto (Av. Santos Dumont, 2849)",
+        "categoria": "Automotivo e mobilidade privada",
+        "avaliacao": 0,
+        "imagem": "https://www.brsupercarga.com.br/",
+        "distancia_metros": 50.11,
+        "coordenada_geografica": {
+            "latitude": -3.73225,
+            "longitude": -38.51021
+        }
+    },
+    {
+        "id": 15,
+        "nome_local": "Posto de apoio ao turista da policia militar",
+        "categoria": "Servico publico",
+        "avaliacao": 0,
+        "imagem": "",
+        "distancia_metros": 50.11,
+        "coordenada_geografica": {
+            "latitude": -3.73225,
+            "longitude": -38.51021
+        }
+    },
+    {
+        "id": 18,
+        "nome_local": "Pizza Duno Gourmet",
+        "categoria": "Alimentacao e bebidas",
+        "avaliacao": 0,
+        "imagem": "https://www.google.com/maps/place/Pizza+Duno+Gourmet/@-3.7319191,-38.5104607,3a,75y,90t/data=!3m8!1e2!3m6!1sCIHM0ogKEICAgIC1uZ2pFQ!2e10!3e12!6shttps:%2F%2Flh3.googleusercontent.com%2Fgps-cs-s%2FAHVAwer9LbhCSZ6kbTSdrUnNbaS0pHtY0kTYJnfQ-zZSiM4MMCapHfJWfKX2odMQGdOVwz6fiq79sjKNnJzbmLW0NuWC7y7CWQuRCTB8AcOWzgqfpbMAG2PvudnGs-X-i52CZUOeiJO1%3Dw203-h270-k-no!7i3468!8i4624!4m7!3m6!1s0x7c7485eba201877:0xbb64337bc4f9360e!8m2!3d-3.7318176!4d-38.51058!10e5!16s%2Fg%2F1vvr6f8l?entry=ttu&g_ep=EgoyMDI2MDMwNC4xIKXMDSoASAFQAw%3D%3D#",
+        "distancia_metros": 50.11,
+        "coordenada_geografica": {
+            "latitude": -3.73225,
+            "longitude": -38.51021
+        }
+    },
+    {
+        "id": 17,
+        "nome_local": "Estacionamento público gratuito",
+        "categoria": "Lugar publico",
+        "avaliacao": 0,
+        "imagem": "",
+        "distancia_metros": 56.97,
+        "coordenada_geografica": {
+            "latitude": -3.732131,
+            "longitude": -38.510369
+        }
+    },
+    {
+        "id": 23,
+        "nome_local": "Pista de skate / pista de patins",
+        "categoria": "Lugar publico",
+        "avaliacao": 0,
+        "imagem": "",
+        "distancia_metros": 56.97,
+        "coordenada_geografica": {
+            "latitude": -3.732131,
+            "longitude": -38.510369
+        }
+    },
+    {
+        "id": 16,
+        "nome_local": "Espaço Mais infância do Estado do Ceará",
+        "categoria": "Servico publico",
+        "avaliacao": 0,
+        "imagem": "https://lh3.googleusercontent.com/gps-cs-s/AHVAwerd3XaSEVMP341la9udluqC0sj_d8pZKztiol1sHBPWrtmxbMkZSrEFavXXuvW3_-Plql1cHTBQ3dRu8oQ8BwL45sgR0E-NY2XVghD4FooYhHBYtmSHt9q-PpR3x1jboui5rgHA=w408-h306-k-no",
+        "distancia_metros": 56.97,
+        "coordenada_geografica": {
+            "latitude": -3.732131,
+            "longitude": -38.510369
+        }
+    },
+    {
+        "id": 10,
+        "nome_local": "Estacionamento Plus – Costa Barros 1510",
+        "categoria": "Automotivo e mobilidade privada",
+        "avaliacao": 0,
+        "imagem": "https://www.parkopedia.com.br/parking/carpark/estacionamento_plus/60115/fortaleza/",
+        "distancia_metros": 160.19,
+        "coordenada_geografica": {
+            "latitude": -3.73055,
+            "longitude": -38.51034
+        }
+    }
+]

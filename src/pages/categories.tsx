@@ -1,14 +1,15 @@
-import { ArrowLeft } from "lucide-react";
+﻿import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CategoryCard } from "@/components/ui/category-card";
 import { deriveCategories } from "@/lib/derivations";
-import { mockedPlaces } from "@/data/mocked-places";
 import { useNavigate } from "react-router-dom";
+import { usePlaces } from "@/hooks/use-places";
 
 export default function CategoriesPage() {
   const navigate = useNavigate();
+  const { places } = usePlaces();
 
-  const derivedCategories = deriveCategories(mockedPlaces)
+  const derivedCategories = deriveCategories(places);
 
   return (
     <main className="w-full">
@@ -28,7 +29,7 @@ export default function CategoriesPage() {
             <p className="text-sm text-muted-foreground">
               {derivedCategories.length} categorias •{" "}
               {derivedCategories.reduce((acc, category) => acc + category.nearBy, 0)} locais
-              proximos
+              próximos
             </p>
           </div>
         </div>

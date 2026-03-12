@@ -25,6 +25,12 @@ export interface FavoriteInputDTO {
   poi_id: number;
 }
 
+export interface PoiDetailInputDTO {
+  poi_id: number;
+  latitude?: number | null;
+  longitude?: number | null;
+}
+
 export interface ValidationErrorDTO {
   loc: Array<string | number>;
   msg: string;

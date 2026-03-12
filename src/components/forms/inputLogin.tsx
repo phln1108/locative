@@ -16,6 +16,7 @@ interface InputPasswordProps extends React.ComponentProps<"input"> {
 
 export default function InputLogin({
   title,
+  type,
   ...props
 }: InputPasswordProps) {
   const [isVisible, setIsVisible] = useState(false)
@@ -30,12 +31,12 @@ export default function InputLogin({
       <div className="relative flex h-14 w-full items-center rounded-xl border border-border bg-background px-4 py-1 focus-within:ring-2 focus-within:ring-focus-ring focus-within:ring-offset-background">
         <Input
           id={id}
-          type={props.type !== "password" || isVisible ? "text" : "password"}
+          type={type !== "password" || isVisible ? "text" : "password"}
           className="border-0 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
           {...props}
         />
 
-        {props.type === "password" && (
+        {type === "password" && (
           <Button
             type="button"
             variant="ghost"

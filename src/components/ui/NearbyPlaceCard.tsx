@@ -1,4 +1,5 @@
 import { MapPin } from "lucide-react";
+import CategoryImage from "./category-image";
 
 interface NearbyPlaceCardProps {
   image: string;
@@ -62,10 +63,13 @@ export default function NearbyPlaceCard({
       "
     >
       <div className="relative w-24 h-20 shrink-0">
-        <img
+        <CategoryImage
           src={image}
           alt={title}
           className="w-24 h-20 object-cover shrink-0"
+          fallbackClassName="w-24 h-20 shrink-0"
+          categoryEmoji={categoryEmoji}
+          categoryColor={categoryColor}
         />
         {categoryEmoji && (
           <span

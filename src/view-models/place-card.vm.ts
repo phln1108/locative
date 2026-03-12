@@ -17,4 +17,6 @@ export interface PlaceCardVM {
   sponsored?: boolean;
   verified?: boolean;
   type?: string;
+  lat?: number;
+  lng?: number;
 }

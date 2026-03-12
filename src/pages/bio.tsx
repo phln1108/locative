@@ -1,16 +1,56 @@
-import { useMemo } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import DetailPage from "./bio-detail";
-import { mockedPlaces } from "@/data/mocked-places";
+import type { Place } from "@/models/models";
+import { placeService } from "@/services/place-service";
+import { useGeolocation } from "@/providers/geolocation-provider";
+import BioDetailSkeleton from "@/components/ui/bio-detail-skeleton";
 
 export default function BioPage() {
   const { placeId } = useParams();
+  const { position } = useGeolocation();
+  const [place, setPlace] = useState<Place | undefined>();
+  const [loading, setLoading] = useState(true);
 
-  const place = useMemo(
-    () => mockedPlaces.find((item) => item.id === parseInt(placeId ?? "")),
-    [placeId]
-  );
+  useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      const id = Number(placeId);
+      if (!Number.isFinite(id)) {
+        setPlace(undefined);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const response = await placeService.getById(id, position[0], position[1]);
+        if (!cancelled) {
+          setPlace(response);
+        }
+      } catch {
+        if (!cancelled) {
+          setPlace(undefined);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [placeId, position]);
+
+  if (loading) {
+    return <BioDetailSkeleton />;
+  }
 
   if (!place) {
     return (

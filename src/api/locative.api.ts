@@ -5,12 +5,22 @@ import type {
   FavoriteInputDTO,
   LoginInputDTO,
   LoginOutputDTO,
+  PoiDetailInputDTO,
   SearchInputDTO,
 } from "@/types/locative-query";
 
 export const locativeApi = {
   async login(payload: LoginInputDTO) {
-    const { data } = await http.post<LoginOutputDTO>("/login", payload);
+    const { data } = await http.post<LoginOutputDTO>(
+      "/login",
+      JSON.stringify(payload),
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    );
     return data;
   },
 
@@ -22,9 +32,9 @@ export const locativeApi = {
     return data;
   },
 
-  async detalharPoi(poiId: number) {
+  async detalharPoi(params: PoiDetailInputDTO) {
     const { data } = await http.get<BackendPoiDTO>("/detalhar_poi", {
-      params: { poi_id: poiId },
+      params,
     });
     return data;
   },
