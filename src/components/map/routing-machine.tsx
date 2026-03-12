@@ -19,8 +19,14 @@ export default function RoutingMachine({ start, end }: RoutingMachineProps) {
     const routing = (L as unknown as { Routing?: any }).Routing;
     if (!routing) return;
 
+    const router = routing.osrmv1({
+      serviceUrl: "https://router.project-osrm.org/route/v1",
+      profile: "foot",
+    });
+
     const control = routing.control({
       waypoints: [L.latLng(start[0], start[1]), L.latLng(end[0], end[1])],
+      router,
       routeWhileDragging: false,
       addWaypoints: false,
       draggableWaypoints: false,
