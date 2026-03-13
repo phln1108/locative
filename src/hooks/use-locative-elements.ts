@@ -1,6 +1,7 @@
 import { locativeService } from "@/services/locative.service";
 import type { BackendPoiDTO } from "@/types/locative-query";
 import { useEffect, useState } from "react";
+import { useGeolocation } from "@/providers/geolocation-provider";
 
 interface UseLocativeElementsOptions {
   latitude: number;
@@ -17,12 +18,13 @@ export function useLocativeElements({
   limite,
   enabled = true,
 }: UseLocativeElementsOptions) {
+  const { loading: geolocationLoading } = useGeolocation();
   const [data, setData] = useState<BackendPoiDTO[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || geolocationLoading) return;
 
     let cancelled = false;
 
@@ -56,7 +58,7 @@ export function useLocativeElements({
     return () => {
       cancelled = true;
     };
-  }, [enabled, latitude, limite, longitude, raio_metros]);
+  }, [enabled, geolocationLoading, latitude, limite, longitude, raio_metros]);
 
   return {
     data,

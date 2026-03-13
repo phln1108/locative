@@ -10,6 +10,25 @@ import type {
   SearchInputDTO,
 } from "@/types/locative-query";
 
+const nearElementsInFlight = new Map<string, Promise<BackendPoiDTO[]>>();
+
+function buildNearElementsKey(
+  lat: number,
+  lng: number,
+  options?: Omit<CoordinatesInputDTO, "latitude" | "longitude">
+) {
+  const normalizedOptions = {
+    limite: options?.limite ?? null,
+    raio_metros: options?.raio_metros ?? null,
+  };
+
+  return JSON.stringify({
+    latitude: lat,
+    longitude: lng,
+    ...normalizedOptions,
+  });
+}
+
 function normalizePoiListResponse(
   payload: BackendPoiDTO[] | Record<string, unknown>
 ): BackendPoiDTO[] {
@@ -40,13 +59,25 @@ export const locativeService = {
   },
 
   async getNearElements(lat: number, lng: number, options?: Omit<CoordinatesInputDTO, "latitude" | "longitude">) {
-    const response = await locativeApi.pontosProximos({
-      latitude: lat,
-      longitude: lng,
-      ...options,
-    });
+    const key = buildNearElementsKey(lat, lng, options);
+    const existingRequest = nearElementsInFlight.get(key);
+    if (existingRequest) {
+      return existingRequest;
+    }
 
-    return normalizePoiListResponse(response);
+    const request = locativeApi
+      .pontosProximos({
+        latitude: lat,
+        longitude: lng,
+        ...options,
+      })
+      .then((response) => normalizePoiListResponse(response))
+      .finally(() => {
+        nearElementsInFlight.delete(key);
+      });
+
+    nearElementsInFlight.set(key, request);
+    return request;
   },
 
   async getPoiDetail(poiId: number, position?: { latitude?: number; longitude?: number }) {

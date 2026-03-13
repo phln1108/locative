@@ -4,12 +4,16 @@ import { placeService } from "@/services/place-service";
 import type { Place } from "@/models/models";
 
 export function usePlaces() {
-  const { position } = useGeolocation();
+  const { loading: geolocationLoading, position } = useGeolocation();
   const [places, setPlaces] = useState<Place[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (geolocationLoading) {
+      return;
+    }
+
     let cancelled = false;
 
     const load = async () => {
@@ -37,7 +41,7 @@ export function usePlaces() {
     return () => {
       cancelled = true;
     };
-  }, [position]);
+  }, [geolocationLoading, position]);
 
   return { places, loading, error };
 }
