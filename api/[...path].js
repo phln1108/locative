@@ -1,11 +1,22 @@
 const DEFAULT_BACKEND_API_URL = "http://localhost:18000";
+const allowSelfSignedTls =
+  String(process.env.ALLOW_SELF_SIGNED_TLS || "").toLowerCase() === "true";
+
+if (allowSelfSignedTls) {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+}
 
 function toTargetUrl(req, backendBaseUrl) {
-  const segments = Array.isArray(req.query.path)
+  const queryPath = Array.isArray(req.query.path)
     ? req.query.path
     : req.query.path
       ? [req.query.path]
       : [];
+  const pathname = req.url ? req.url.split("?")[0] : "";
+  const fallbackPath = pathname.startsWith("/api/")
+    ? pathname.slice("/api/".length).split("/").filter(Boolean)
+    : [];
+  const segments = queryPath.length > 0 ? queryPath : fallbackPath;
 
   const cleanBase = backendBaseUrl.replace(/\/+$/, "");
   const cleanPath = segments.map((part) => String(part)).join("/");
