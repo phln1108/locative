@@ -56,6 +56,19 @@ function sanitizeResponseHeaders(headers) {
   return sanitized;
 }
 
+function getErrorDetail(error) {
+  if (!(error instanceof Error)) {
+    return "Unexpected proxy failure";
+  }
+
+  const cause =
+    error.cause && typeof error.cause === "object" && "message" in error.cause
+      ? String(error.cause.message)
+      : null;
+
+  return cause ? `${error.message}: ${cause}` : error.message;
+}
+
 export default async function handler(req, res) {
   const backendBaseUrl = process.env.BACKEND_API_URL?.trim();
   if (!backendBaseUrl) {
@@ -82,12 +95,20 @@ export default async function handler(req, res) {
   }
 
   try {
-    const upstream = await fetch(targetUrl, {
-      method,
-      headers,
-      body,
-      redirect: "manual",
-    });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort("Upstream request timed out"), 8000);
+    let upstream;
+    try {
+      upstream = await fetch(targetUrl, {
+        method,
+        headers,
+        body,
+        signal: controller.signal,
+        redirect: "manual",
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
 
     const responseHeaders = sanitizeResponseHeaders(upstream.headers);
     for (const [key, value] of Object.entries(responseHeaders)) {
@@ -97,9 +118,10 @@ export default async function handler(req, res) {
     const responseBody = await upstream.text();
     res.status(upstream.status).send(responseBody);
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unexpected proxy failure";
-    res.status(502).json({
+    const message = getErrorDetail(error);
+    const status =
+      error instanceof Error && error.name === "AbortError" ? 504 : 502;
+    res.status(status).json({
       message: "Failed to reach upstream API",
       detail: message,
       target: targetUrl,
