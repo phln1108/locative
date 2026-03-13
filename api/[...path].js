@@ -1,5 +1,3 @@
-const DEFAULT_BACKEND_API_URL = "http://localhost:18000";
-
 function toTargetUrl(req, backendBaseUrl) {
   const queryPath = Array.isArray(req.query.path)
     ? req.query.path
@@ -15,17 +13,11 @@ function toTargetUrl(req, backendBaseUrl) {
   const cleanBase = backendBaseUrl.replace(/\/+$/, "");
   const cleanPath = segments.map((part) => String(part)).join("/");
   const target = new URL(`${cleanBase}/${cleanPath}`);
-
-  for (const [key, value] of Object.entries(req.query)) {
-    if (key === "path") continue;
-    if (Array.isArray(value)) {
-      value.forEach((item) => target.searchParams.append(key, String(item)));
-      continue;
-    }
-    if (value !== undefined) {
-      target.searchParams.append(key, String(value));
-    }
-  }
+  const requestUrl = new URL(req.url || "/", "http://localhost");
+  requestUrl.searchParams.delete("path");
+  requestUrl.searchParams.forEach((value, key) => {
+    target.searchParams.append(key, value);
+  });
 
   return target.toString();
 }
@@ -65,7 +57,14 @@ function sanitizeResponseHeaders(headers) {
 }
 
 export default async function handler(req, res) {
-  const backendBaseUrl = process.env.BACKEND_API_URL || DEFAULT_BACKEND_API_URL;
+  const backendBaseUrl = process.env.BACKEND_API_URL?.trim();
+  if (!backendBaseUrl) {
+    res.status(500).json({
+      message: "BACKEND_API_URL is not configured",
+    });
+    return;
+  }
+
   const targetUrl = toTargetUrl(req, backendBaseUrl);
   const headers = sanitizeRequestHeaders(req.headers);
   const method = req.method || "GET";
