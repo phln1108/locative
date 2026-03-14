@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const baseURL = "/api";
+const DEFAULT_API_URL = "http://localhost:18000";
+const configuredApiUrl = import.meta.env.VITE_API_URL?.trim();
+const baseURL = configuredApiUrl || DEFAULT_API_URL;
 
 export const http = axios.create({
   baseURL,
