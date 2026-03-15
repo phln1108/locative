@@ -1,11 +1,17 @@
 import { http } from "./http-client";
 import type {
+  AdminPoiCreateInputDTO,
+  AdminPoiCreateOutputDTO,
+  AdminPoiListItemDTO,
+  AdminPoiUpdateOutputDTO,
   BackendPoiDTO,
   CoordinatesInputDTO,
   FavoriteInputDTO,
   LoginInputDTO,
   LoginOutputDTO,
   PoiDetailInputDTO,
+  RegisterInputDTO,
+  RegisterOutputDTO,
   SearchInputDTO,
 } from "@/types/locative-query";
 
@@ -21,6 +27,46 @@ export const locativeApi = {
         },
       }
     );
+    return data;
+  },
+
+  async register(payload: RegisterInputDTO) {
+    const { data } = await http.post<RegisterOutputDTO>("/register", payload, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    return data;
+  },
+
+  async listAdminPois() {
+    const { data } = await http.get<AdminPoiListItemDTO[]>("/internal/pois");
+    return data;
+  },
+
+  async createAdminPoi(payload: AdminPoiCreateInputDTO) {
+    const { data } = await http.post<AdminPoiCreateOutputDTO>("/internal/pois", payload, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    return data;
+  },
+
+  async getAdminPoi(poiId: number) {
+    const { data } = await http.get<AdminPoiListItemDTO>(`/internal/pois/${poiId}`);
+    return data;
+  },
+
+  async updateAdminPoi(poiId: number, payload: AdminPoiCreateInputDTO) {
+    const { data } = await http.put<AdminPoiUpdateOutputDTO>(`/internal/pois/${poiId}`, payload, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
     return data;
   },
 

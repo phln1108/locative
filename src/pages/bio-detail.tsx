@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/carousel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CategoryImage from "@/components/ui/category-image";
+import MarkdownContent from "@/components/ui/markdown-content";
 
 import type { Place, ReviewDetailed } from "@/models/models";
 import { getCategoryByKey } from "@/data/categories";
@@ -344,7 +345,7 @@ export default function DetailPage({ data }: Props) {
         {data.description && (
           <div className="space-y-2">
             <h2 className="text-xl font-semibold">Sobre</h2>
-            <p className="text-muted-foreground leading-relaxed">{data.description}</p>
+            <MarkdownContent content={data.description} className="space-y-4" />
           </div>
         )}
 
@@ -397,7 +398,7 @@ export default function DetailPage({ data }: Props) {
             {data.sections.map((s) => (
               <TabsContent key={s.title} value={s.title}>
                 <Card className="p-4 space-y-3">
-                  {s.content && <p className="text-muted-foreground">{s.content}</p>}
+                  {s.content && <MarkdownContent content={s.content} className="space-y-4" />}
                   {s.items?.map((i) => (
                     <div key={i} className="text-sm">
                       * {i}

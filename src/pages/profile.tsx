@@ -297,6 +297,18 @@ export default function ProfilePage() {
                         <ChevronRight className="w-4 h-4" />
                     </Button>
 
+                    <Button
+                        variant="ghost"
+                        className="w-full justify-between"
+                        onClick={() => navigate("/adm/list")}
+                    >
+                        <span className="flex items-center gap-2">
+                            <Shield className="w-4 h-4" />
+                            Administrar Estabelecimentos
+                        </span>
+                        <ChevronRight className="w-4 h-4" />
+                    </Button>
+
                 </CardContent>
             </Card>
 

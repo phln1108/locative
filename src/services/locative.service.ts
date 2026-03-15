@@ -1,12 +1,18 @@
 import { locativeApi } from "@/api/locative.api";
 import { setHttpAuthToken } from "@/api/http-client";
 import type {
+  AdminPoiCreateInputDTO,
+  AdminPoiCreateOutputDTO,
+  AdminPoiListItemDTO,
+  AdminPoiUpdateOutputDTO,
   BackendPoiDTO,
   CoordinatesInputDTO,
   FavoriteInputDTO,
   LoginInputDTO,
   LoginOutputDTO,
   PoiDetailInputDTO,
+  RegisterInputDTO,
+  RegisterOutputDTO,
   SearchInputDTO,
 } from "@/types/locative-query";
 
@@ -52,6 +58,29 @@ export const locativeService = {
     const output = await locativeApi.login(payload);
     setHttpAuthToken(output.access_token);
     return output;
+  },
+
+  async register(payload: RegisterInputDTO): Promise<RegisterOutputDTO> {
+    return locativeApi.register(payload);
+  },
+
+  async listAdminPois(): Promise<AdminPoiListItemDTO[]> {
+    return locativeApi.listAdminPois();
+  },
+
+  async createAdminPoi(payload: AdminPoiCreateInputDTO): Promise<AdminPoiCreateOutputDTO> {
+    return locativeApi.createAdminPoi(payload);
+  },
+
+  async getAdminPoi(poiId: number): Promise<AdminPoiListItemDTO> {
+    return locativeApi.getAdminPoi(poiId);
+  },
+
+  async updateAdminPoi(
+    poiId: number,
+    payload: AdminPoiCreateInputDTO
+  ): Promise<AdminPoiUpdateOutputDTO> {
+    return locativeApi.updateAdminPoi(poiId, payload);
   },
 
   logout() {

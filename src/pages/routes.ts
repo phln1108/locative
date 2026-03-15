@@ -13,6 +13,8 @@ import BioPage from "./bio";
 import FavoritesPage from "./favorites";
 import CategoryCardsPage from "./category-cards";
 import ReviewsPage from "./reviews";
+import AdminPoiListPage from "./adm-list";
+import AdminPoiRegisterPage from "./adm-register";
 
 
 const router = createBrowserRouter([
@@ -47,6 +49,14 @@ const router = createBrowserRouter([
             {
                 path: "category",
                 Component: CategoryCardsPage
+            },
+            {
+                path: "adm/list",
+                Component: AdminPoiListPage
+            },
+            {
+                path: "adm/register",
+                Component: AdminPoiRegisterPage
             },
         ]
     },
