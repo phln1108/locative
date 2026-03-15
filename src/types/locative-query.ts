@@ -39,8 +39,18 @@ export interface AdminPoiListItemDTO {
   brand?: string | null;
   price_level?: number | null;
   image_url?: string | null;
+  contacts: AdminPoiContactDTO[];
   created_at: string;
   updated_at: string;
+}
+
+export interface AdminPoiContactDTO {
+  contact_id?: number;
+  contact_type: string;
+  contact_value: string;
+  label?: string | null;
+  is_primary: boolean;
+  created_at?: string;
 }
 
 export interface AdminPoiCreateInputDTO {
@@ -60,6 +70,14 @@ export interface AdminPoiCreateInputDTO {
   brand?: string;
   price_level?: number;
   image_url?: string;
+  contacts: AdminPoiContactInputDTO[];
+}
+
+export interface AdminPoiContactInputDTO {
+  contact_type: string;
+  contact_value: string;
+  label?: string;
+  is_primary: boolean;
 }
 
 export interface AdminPoiCreateOutputDTO {

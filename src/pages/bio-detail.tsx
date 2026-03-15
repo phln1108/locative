@@ -3,8 +3,11 @@ import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   Calendar,
+  Copy,
+  ExternalLink,
   Globe,
   Heart,
+  Mail,
   MapPin,
   Navigation,
   Phone,
@@ -28,7 +31,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CategoryImage from "@/components/ui/category-image";
 import MarkdownContent from "@/components/ui/markdown-content";
 
-import type { Place, ReviewDetailed } from "@/models/models";
+import type { Place, PlaceContact, ReviewDetailed } from "@/models/models";
 import { getCategoryByKey } from "@/data/categories";
 import { localReviewsService } from "@/services/local-reviews.service";
 import { useAuth } from "@/providers/auth-provider";
@@ -122,6 +125,7 @@ export default function DetailPage({ data }: Props) {
   }, [data.rating, mergedReviews]);
 
   const hasMyReview = myReviewId !== null;
+  const contacts = useMemo(() => data.contacts ?? [], [data.contacts]);
 
   const goToRoute = () => {
     const params = new URLSearchParams({
@@ -161,6 +165,50 @@ export default function DetailPage({ data }: Props) {
     if (type === "map") {
       goToRoute();
     }
+  };
+
+  const getContactLabel = (contact: PlaceContact) => {
+    if (contact.label) return contact.label;
+
+    const labels: Record<string, string> = {
+      phone: "Telefone",
+      whatsapp: "WhatsApp",
+      email: "E-mail",
+      instagram: "Instagram",
+      facebook: "Facebook",
+      telegram: "Telegram",
+      website: "Site",
+    };
+
+    return labels[contact.type] ?? contact.type;
+  };
+
+  const handleContactClick = async (contact: PlaceContact) => {
+    if (contact.type === "website") {
+      window.open(contact.value, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(contact.value);
+        toast("Contato copiado.", { type: "success" });
+        return;
+      } catch {
+        // fallback below
+      }
+    }
+
+    const tempInput = document.createElement("textarea");
+    tempInput.value = contact.value;
+    tempInput.style.position = "fixed";
+    tempInput.style.opacity = "0";
+    document.body.appendChild(tempInput);
+    tempInput.focus();
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+    toast("Contato copiado.", { type: "success" });
   };
 
   const ensureAuthenticated = (featureLabel = "esta funcionalidade") => {
@@ -339,6 +387,42 @@ export default function DetailPage({ data }: Props) {
                 </Button>
               );
             })}
+          </div>
+        )}
+
+        {contacts.length > 0 && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Contatos</h2>
+            <div className="space-y-2">
+              {contacts.map((contact, index) => {
+                const Icon =
+                  contact.type === "website"
+                    ? Globe
+                    : contact.type === "email"
+                      ? Mail
+                      : Phone;
+
+                return (
+                  <button
+                    key={`${contact.type}-${contact.value}-${index}`}
+                    type="button"
+                    onClick={() => void handleContactClick(contact)}
+                    className="flex w-full items-start gap-3 rounded-xl border p-3 text-left cursor-pointer transition hover:bg-muted/40"
+                  >
+                    <Icon className="mt-0.5 h-4 w-4 text-muted-foreground" />
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm font-medium">{getContactLabel(contact)}</div>
+                      <div className="break-all text-sm text-muted-foreground">{contact.value}</div>
+                    </div>
+                    {contact.type === "website" ? (
+                      <ExternalLink className="self-start h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <Copy className="self-start h-4 w-4 text-muted-foreground" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         )}
 

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -15,19 +17,22 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MarkdownContent from "@/components/ui/markdown-content";
 import { locativeService } from "@/services/locative.service";
+import { categoryRegistry } from "@/data/categories";
+import { getCategoryCodeLabel } from "@/lib/category-code-labels";
+import type { AdminPoiContactInputDTO } from "@/types/locative-query";
 
 const STATUS_OPTIONS = ["active", "inactive", "planned", "archived"] as const;
-const CATEGORY_OPTIONS = [
-  "restaurant",
-  "public_square",
-  "healthcare",
-  "museum",
-  "shopping",
-  "public_service",
-  "education",
-  "transport",
+const CONTACT_TYPE_OPTIONS = [
+  { value: "phone", label: "Telefone" },
+  { value: "email", label: "E-mail" },
+  { value: "website", label: "Website" },
+  { value: "whatsapp", label: "WhatsApp" },
+  { value: "instagram", label: "Instagram" },
+  { value: "facebook", label: "Facebook" },
+  { value: "telegram", label: "Telegram" },
 ] as const;
 const PRICE_OPTIONS = [
+  { value: "none", label: "Sem preco" },
   { value: "1", label: "$" },
   { value: "2", label: "$$" },
   { value: "3", label: "$$$" },
@@ -51,7 +56,17 @@ type FormState = {
   brand: string;
   price_level: string;
   image_url: string;
+  contacts: AdminPoiContactInputDTO[];
 };
+
+function createEmptyContact(): AdminPoiContactInputDTO {
+  return {
+    contact_type: "phone",
+    contact_value: "",
+    label: "",
+    is_primary: false,
+  };
+}
 
 const initialState: FormState = {
   name: "",
@@ -68,9 +83,12 @@ const initialState: FormState = {
   address_country: "BR",
   status: "active",
   brand: "",
-  price_level: "",
+  price_level: "none",
   image_url: "",
+  contacts: [],
 };
+
+const CATEGORY_OPTIONS = categoryRegistry.map((category) => category.key);
 
 export default function AdminPoiRegisterPage() {
   const navigate = useNavigate();
@@ -108,8 +126,15 @@ export default function AdminPoiRegisterPage() {
           address_country: item.address_country ?? "BR",
           status: item.status ?? "active",
           brand: item.brand ?? "",
-          price_level: item.price_level ? String(item.price_level) : "",
+          price_level: item.price_level === null || item.price_level === undefined ? "none" : String(item.price_level),
           image_url: item.image_url ?? "",
+          contacts:
+            item.contacts?.map((contact) => ({
+              contact_type: contact.contact_type,
+              contact_value: contact.contact_value,
+              label: contact.label ?? "",
+              is_primary: contact.is_primary,
+            })) ?? [],
         });
       } catch {
         toast("Nao foi possivel carregar o estabelecimento para edicao.", { type: "error" });
@@ -123,6 +148,55 @@ export default function AdminPoiRegisterPage() {
 
   const updateField = (field: keyof FormState, value: string) => {
     setForm((current) => ({ ...current, [field]: value }));
+  };
+
+  const updateContact = (
+    index: number,
+    field: keyof AdminPoiContactInputDTO,
+    value: string | boolean
+  ) => {
+    setForm((current) => {
+      const contacts = current.contacts.map((contact, contactIndex) => {
+        if (contactIndex !== index) return contact;
+
+        if (field === "is_primary") {
+          const isPrimary = Boolean(value);
+          if (!isPrimary) {
+            return { ...contact, is_primary: false };
+          }
+
+          return { ...contact, is_primary: true };
+        }
+
+        return { ...contact, [field]: value };
+      });
+
+      if (field === "is_primary" && value) {
+        return {
+          ...current,
+          contacts: contacts.map((contact, contactIndex) => ({
+            ...contact,
+            is_primary: contactIndex === index,
+          })),
+        };
+      }
+
+      return { ...current, contacts };
+    });
+  };
+
+  const addContact = () => {
+    setForm((current) => ({
+      ...current,
+      contacts: [...current.contacts, createEmptyContact()],
+    }));
+  };
+
+  const removeContact = (index: number) => {
+    setForm((current) => ({
+      ...current,
+      contacts: current.contacts.filter((_, contactIndex) => contactIndex !== index),
+    }));
   };
 
   const submit = async () => {
@@ -156,8 +230,16 @@ export default function AdminPoiRegisterPage() {
         address_country: form.address_country.trim() || undefined,
         status: form.status,
         brand: form.brand.trim() || undefined,
-        price_level: form.price_level ? Number(form.price_level) : undefined,
+        price_level: form.price_level === "none" ? undefined : Number(form.price_level),
         image_url: form.image_url.trim() || undefined,
+        contacts: form.contacts
+          .map((contact) => ({
+            contact_type: contact.contact_type,
+            contact_value: contact.contact_value.trim(),
+            label: contact.label?.trim() || undefined,
+            is_primary: contact.is_primary,
+          }))
+          .filter((contact) => contact.contact_value),
       };
 
       if (isEditing) {
@@ -265,7 +347,7 @@ export default function AdminPoiRegisterPage() {
                     <SelectContent>
                       {CATEGORY_OPTIONS.map((option) => (
                         <SelectItem key={option} value={option}>
-                          {option}
+                          {getCategoryCodeLabel(option)}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -347,6 +429,84 @@ export default function AdminPoiRegisterPage() {
                 <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="image">URL da imagem</Label>
                   <Input id="image" value={form.image_url} onChange={(event) => updateField("image_url", event.target.value)} />
+                </div>
+
+                <div className="space-y-4 md:col-span-2">
+                  <div className="flex items-center justify-between gap-3">
+                    <Label>Contatos</Label>
+                    <Button type="button" variant="outline" size="sm" onClick={addContact}>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Adicionar contato
+                    </Button>
+                  </div>
+
+                  {form.contacts.length === 0 ? (
+                    <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+                      Nenhum contato cadastrado.
+                    </div>
+                  ) : null}
+
+                  <div className="space-y-4">
+                    {form.contacts.map((contact, index) => (
+                      <div key={`${contact.contact_type}-${index}`} className="rounded-xl border p-4 space-y-4">
+                        <div className="flex items-start justify-between gap-3">
+                          <p className="text-sm font-medium">Contato {index + 1}</p>
+                          <Button type="button" variant="ghost" size="sm" onClick={() => removeContact(index)}>
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Remover
+                          </Button>
+                        </div>
+
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <div className="space-y-2">
+                            <Label>Tipo</Label>
+                            <Select
+                              value={contact.contact_type}
+                              onValueChange={(value) => updateContact(index, "contact_type", value)}
+                            >
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Selecione o tipo" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {CONTACT_TYPE_OPTIONS.map((option) => (
+                                  <SelectItem key={option.value} value={option.value}>
+                                    {option.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label>Rotulo</Label>
+                            <Input
+                              value={contact.label ?? ""}
+                              onChange={(event) => updateContact(index, "label", event.target.value)}
+                              placeholder="Ex.: Atendimento"
+                            />
+                          </div>
+
+                          <div className="space-y-2 md:col-span-2">
+                            <Label>Valor</Label>
+                            <Input
+                              value={contact.contact_value}
+                              onChange={(event) => updateContact(index, "contact_value", event.target.value)}
+                              placeholder="Ex.: (85) 99999-9999 ou https://..."
+                            />
+                          </div>
+
+                          <div className="flex items-center gap-3 md:col-span-2">
+                            <Checkbox
+                              id={`contact-primary-${index}`}
+                              checked={contact.is_primary}
+                              onCheckedChange={(checked) => updateContact(index, "is_primary", Boolean(checked))}
+                            />
+                            <Label htmlFor={`contact-primary-${index}`}>Contato principal</Label>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 

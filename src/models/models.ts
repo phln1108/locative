@@ -22,6 +22,14 @@ export interface ContactInfo {
   email?: string;
 }
 
+export interface PlaceContact {
+  id?: number;
+  type: string;
+  value: string;
+  label?: string;
+  isPrimary?: boolean;
+}
+
 export interface ReviewDetailed {
   id: number;
   user: string;
@@ -66,6 +74,7 @@ export interface Place {
   };
 
   contact?: ContactInfo;
+  contacts?: PlaceContact[];
 
   openingHours?: OpeningHours;
 

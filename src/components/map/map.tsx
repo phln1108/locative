@@ -15,6 +15,7 @@ import { useLocativeElements } from "@/hooks/use-locative-elements";
 import type { BackendPoiDTO } from "@/types/locative-query";
 import { mockedElements } from "@/data/mocked-elements";
 import CategoryImage from "@/components/ui/category-image";
+import { mapCategoryCodeToCategoryKey } from "@/lib/category-mapping";
 
 import "@/lib/map-icons";
 import SearchBar from "../navigation/search-bar";
@@ -53,61 +54,6 @@ function formatDistanceFromMeters(value: unknown): string | undefined {
   if (distanceMeters === null) return undefined;
   if (distanceMeters < 1000) return `${Math.round(distanceMeters)} m`;
   return `${(distanceMeters / 1000).toFixed(1)} km`;
-}
-
-function normalizeCategoryCode(code?: string): string {
-  if (!code) return "";
-
-  return code
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim()
-    .toLowerCase()
-    .replace(/[^\w]+/g, "_")
-    .replace(/^_+|_+$/g, "");
-}
-
-function mapCategoryCodeToCategoryKey(code?: string): string | undefined {
-  const normalizedCode = normalizeCategoryCode(code);
-  if (!normalizedCode) return undefined;
-
-  const map: Record<string, string> = {
-    public_place: "public_place",
-    infrastructure: "infrastructure",
-    public_service: "public_service",
-    transport: "transport",
-    pois_privados_alimentacao_gastronomia_e_bebidas: "food",
-    pois_privados_compras_e_varejo: "shopping",
-    pois_privado_compras_e_varejo: "shopping",
-    pois_privado_shopping_center: "shopping",
-    pois_privados_saude: "health",
-    pois_privados_automotivo_e_mobilidade_privada: "automotive",
-    servico_publico: "public_service",
-    lugar_publico: "public_place",
-    infraestrutura_urbana: "infrastructure",
-    alimentacao_e_bebidas: "food",
-    comercio_e_varejo: "shopping",
-    shopping_center: "shopping",
-    saude: "health",
-    transporte: "transport",
-    automotivo_e_mobilidade_privada: "automotive",
-  };
-
-  if (map[normalizedCode]) return map[normalizedCode];
-
-  if (normalizedCode.startsWith("pois_privados_alimentacao")) return "food";
-  if (normalizedCode.includes("compras") || normalizedCode.includes("varejo")) return "shopping";
-  if (normalizedCode.includes("saude")) return "health";
-  if (normalizedCode.includes("automotivo") || normalizedCode.includes("mobilidade")) return "automotive";
-  if (normalizedCode.includes("transport")) return "transport";
-  if (normalizedCode.includes("servico_publico")) return "public_service";
-  if (normalizedCode.includes("lugar_publico")) return "public_place";
-  if (normalizedCode.includes("infraestrutura")) return "infrastructure";
-  if (normalizedCode.includes("turismo")) return "tourism";
-  if (normalizedCode.includes("educacao")) return "education";
-  if (normalizedCode.includes("finance")) return "finance";
-
-  return "services";
 }
 
 function getCoordinates(poi: BackendPoiDTO): { lat: number; lng: number } | null {

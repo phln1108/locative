@@ -1,6 +1,7 @@
 import { locativeService } from "@/services/locative.service";
-import type { Place } from "@/models/models";
+import type { Place, PlaceContact } from "@/models/models";
 import type { BackendPoiDTO } from "@/types/locative-query";
+import { mapCategoryCodeToCategoryKey } from "@/lib/category-mapping";
 
 function toNumber(value: unknown): number | undefined {
   if (typeof value === "number" && Number.isFinite(value)) return value;
@@ -24,78 +25,30 @@ function formatDistanceFromMeters(value: unknown): string | undefined {
   return `${(distanceMeters / 1000).toFixed(1)} km`;
 }
 
-function normalizeCategoryCode(code?: string): string {
-  if (!code) return "";
+function parseContacts(value: unknown): PlaceContact[] {
+  if (!Array.isArray(value)) return [];
 
-  return code
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim()
-    .toLowerCase()
-    .replace(/[^\w]+/g, "_")
-    .replace(/^_+|_+$/g, "");
-}
+  const contacts: PlaceContact[] = [];
 
-function mapCategoryCodeToCategoryKey(code?: string): string {
-  const normalizedCode = normalizeCategoryCode(code);
+  for (const item of value) {
+    if (!item || typeof item !== "object") continue;
 
-  const map: Record<string, string> = {
-    food_beverage: "food",
-    nightlife: "entertainment",
-    retail: "shopping",
-    entertainment: "culture",
-    tourism_hospitality: "tourism",
-    finance: "finance",
-    personal_services: "services",
-    professional_services: "services",
-    private_education: "education",
-    automotive: "automotive",
-    health: "health",
-    education: "education",
-    public_place: "public_place",
-    infrastructure: "infrastructure",
-    public_service: "public_service",
-    situated_event: "tourism",
-    symbolic_heritage: "culture",
-    commercial_poi: "services",
-    public_transport: "transport",
-    natural_element: "nature",
-    mobile_element: "services",
-    religious_spiritual: "culture",
-    pois_privados_alimentacao_gastronomia_e_bebidas: "food",
-    pois_privados_compras_e_varejo: "shopping",
-    pois_privado_compras_e_varejo: "shopping",
-    pois_privado_shopping_center: "shopping",
-    pois_privados_saude: "health",
-    pois_privados_automotivo_e_mobilidade_privada: "automotive",
-    transport: "transport",
-    servico_publico: "public_service",
-    lugar_publico: "public_place",
-    infraestrutura_urbana: "infrastructure",
-    alimentacao_e_bebidas: "food",
-    comercio_e_varejo: "shopping",
-    shopping_center: "shopping",
-    saude: "health",
-    transporte: "transport",
-    automotivo_e_mobilidade_privada: "automotive",
-  };
+    const record = item as Record<string, unknown>;
+    const type = toNonEmptyString(record.contact_type);
+    const contactValue = toNonEmptyString(record.contact_value);
 
-  if (!normalizedCode) return "services";
-  if (map[normalizedCode]) return map[normalizedCode];
+    if (!type || !contactValue) continue;
 
-  if (normalizedCode.startsWith("pois_privados_alimentacao")) return "food";
-  if (normalizedCode.includes("compras") || normalizedCode.includes("varejo")) return "shopping";
-  if (normalizedCode.includes("saude")) return "health";
-  if (normalizedCode.includes("automotivo") || normalizedCode.includes("mobilidade")) return "automotive";
-  if (normalizedCode.includes("transport")) return "transport";
-  if (normalizedCode.includes("servico_publico")) return "public_service";
-  if (normalizedCode.includes("lugar_publico")) return "public_place";
-  if (normalizedCode.includes("infraestrutura")) return "infrastructure";
-  if (normalizedCode.includes("turismo")) return "tourism";
-  if (normalizedCode.includes("educacao")) return "education";
-  if (normalizedCode.includes("finance")) return "finance";
+    contacts.push({
+      id: toNumber(record.contact_id),
+      type,
+      value: contactValue,
+      label: toNonEmptyString(record.label),
+      isPrimary: Boolean(record.is_primary),
+    });
+  }
 
-  return "services";
+  return contacts;
 }
 
 function mapBackendPoiToPlace(
@@ -173,6 +126,10 @@ function mapBackendPoiToPlace(
   const addressText =
     (record.endereco as string | undefined) ??
     (record.address as string | undefined);
+  const contacts = parseContacts(record.contacts);
+  const primaryPhone = contacts.find((contact) => contact.type === "phone" || contact.type === "whatsapp");
+  const primaryWebsite = contacts.find((contact) => contact.type === "website");
+  const primaryEmail = contacts.find((contact) => contact.type === "email");
 
   return {
     id,
@@ -216,13 +173,16 @@ function mapBackendPoiToPlace(
       : undefined,
     contact: {
       phone:
+        primaryPhone?.value ??
         (record.phone as string | undefined) ??
         (record.telefone as string | undefined),
       website:
+        primaryWebsite?.value ??
         (record.website as string | undefined) ??
         (record.url as string | undefined),
-      email: (record.email as string | undefined) ?? undefined,
+      email: primaryEmail?.value ?? ((record.email as string | undefined) ?? undefined),
     },
+    contacts,
   };
 }
 
