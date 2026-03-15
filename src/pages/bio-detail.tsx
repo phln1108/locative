@@ -244,6 +244,24 @@ export default function DetailPage({ data }: Props) {
     setIsReportModalOpen(true);
   };
 
+  const deleteMyReview = async () => {
+    if (myReviewId === null) return;
+
+    await localReviewsService.deleteMyReview(myReviewId, data.id);
+
+    const [myReview, reviewsByPlace] = await Promise.all([
+      localReviewsService.getMyReviewByPlace(data.id),
+      localReviewsService.listByPlace(data.id),
+    ]);
+
+    setLocalReviews(reviewsByPlace);
+    setMyReviewId(myReview?.id ?? null);
+    setMyRating(5);
+    setMyComment("");
+    setIsReviewModalOpen(false);
+    toast("Avaliacao excluida com sucesso!", { type: "success" });
+  };
+
   const handleCancelReport = () => {
     setIsReportModalOpen(false);
     setReportDetails("");
@@ -637,7 +655,18 @@ export default function DetailPage({ data }: Props) {
               </div>
             </div>
 
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-between gap-2">
+              {hasMyReview ? (
+                <Button
+                  variant="outline"
+                  className="border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
+                  onClick={() => void deleteMyReview()}
+                >
+                  Excluir avaliacao
+                </Button>
+              ) : (
+                <div />
+              )}
               <Button variant="outline" onClick={() => setIsReviewModalOpen(false)}>
                 Cancelar
               </Button>

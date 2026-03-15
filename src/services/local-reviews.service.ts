@@ -1,25 +1,11 @@
 import type { ReviewDetailed } from "@/models/models";
 import { http } from "@/api/http-client";
-import { AxiosError } from "axios";
 
 const STORAGE_KEY = "locative:user-reviews:v1";
 const CURRENT_USER = "você";
-const REVIEWS_LIST_MINE_PATHS = (
-  import.meta.env.VITE_REVIEWS_LIST_MINE_PATHS as string | undefined
-)
-  ?.split(",")
-  .map((item) => item.trim())
-  .filter(Boolean) ?? [];
-const REVIEWS_LIST_BY_POI_PATHS = (
-  import.meta.env.VITE_REVIEWS_LIST_BY_POI_PATHS as string | undefined
-)
-  ?.split(",")
-  .map((item) => item.trim())
-  .filter(Boolean) ?? [];
-const REVIEWS_UPSERT_PATH = (import.meta.env.VITE_REVIEWS_UPSERT_PATH as string | undefined)?.trim();
-const REVIEWS_UPSERT_METHOD = (
-  import.meta.env.VITE_REVIEWS_UPSERT_METHOD as string | undefined
-)?.toUpperCase() as "POST" | "PUT" | undefined;
+const REVIEWS_LIST_MINE_PATH = "/avaliacoes/minhas";
+const REVIEWS_LIST_BY_POI_PATH = "/avaliacoes";
+const REVIEWS_UPSERT_PATH = "/avaliacoes";
 
 export interface UserReview extends ReviewDetailed {
   placeId: number;
@@ -151,40 +137,10 @@ function mapReviewRecord(
   };
 }
 
-async function requestWithFallback<T>(
-  requests: Array<() => Promise<T>>
-): Promise<T> {
-  let lastError: unknown;
-
-  for (const request of requests) {
-    try {
-      return await request();
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      const status = axiosError.response?.status;
-      if (status === 404 || status === 405) {
-        lastError = error;
-        continue;
-      }
-      throw error;
-    }
-  }
-
-  throw lastError ?? new Error("Nenhuma rota de avaliacao respondeu.");
-}
-
 export const localReviewsService = {
   async listMine(): Promise<UserReview[]> {
     try {
-      if (REVIEWS_LIST_MINE_PATHS.length === 0) {
-        throw new Error("Rotas de avaliacao nao configuradas.");
-      }
-
-      const data = await requestWithFallback<unknown>(
-        REVIEWS_LIST_MINE_PATHS.map(
-          (path) => () => http.get(path).then((response) => response.data)
-        )
-      );
+      const data = await http.get(REVIEWS_LIST_MINE_PATH).then((response) => response.data);
 
       const parsed = normalizeList(data)
         .map((item) => mapReviewRecord(item, undefined, true))
@@ -207,15 +163,9 @@ export const localReviewsService = {
 
   async listByPlace(placeId: number): Promise<UserReview[]> {
     try {
-      if (REVIEWS_LIST_BY_POI_PATHS.length === 0) {
-        throw new Error("Rotas de avaliacao nao configuradas.");
-      }
-
-      const data = await requestWithFallback<unknown>(
-        REVIEWS_LIST_BY_POI_PATHS.map(
-          (path) => () => http.get(path, { params: { poi_id: placeId } }).then((response) => response.data)
-        )
-      );
+      const data = await http
+        .get(REVIEWS_LIST_BY_POI_PATH, { params: { poi_id: placeId } })
+        .then((response) => response.data);
 
       const parsed = normalizeList(data)
         .map((item) => mapReviewRecord(item, placeId))
@@ -247,15 +197,7 @@ export const localReviewsService = {
     };
 
     try {
-      if (!REVIEWS_UPSERT_PATH || !REVIEWS_UPSERT_METHOD) {
-        throw new Error("Rota de avaliacao nao configurada.");
-      }
-
-      if (REVIEWS_UPSERT_METHOD === "PUT") {
-        await http.put(REVIEWS_UPSERT_PATH, requestPayload);
-      } else {
-        await http.post(REVIEWS_UPSERT_PATH, requestPayload);
-      }
+      await http.post(REVIEWS_UPSERT_PATH, requestPayload);
     } catch {
       // Mantem fallback local quando backend ainda nao tem rota final.
     }
@@ -286,5 +228,18 @@ export const localReviewsService = {
     }
 
     writeStorage(allReviews);
+  },
+
+  async deleteMyReview(reviewId: number, placeId: number) {
+    try {
+      await http.delete(`${REVIEWS_UPSERT_PATH}/${reviewId}`);
+    } catch {
+      // Mantem fallback local quando backend ainda nao tem rota final.
+    }
+
+    const nextReviews = readStorage().filter(
+      (review) => !(review.id === reviewId || (review.placeId === placeId && review.user === CURRENT_USER))
+    );
+    writeStorage(nextReviews);
   },
 };
