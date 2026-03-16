@@ -240,7 +240,6 @@ export default function DetailPage({ data }: Props) {
   };
 
   const handleOpenReportModal = () => {
-    if (!ensureAuthenticated("denunciar estabelecimentos")) return;
     setIsReportModalOpen(true);
   };
 
@@ -268,7 +267,7 @@ export default function DetailPage({ data }: Props) {
   };
 
   const handleSaveReport = () => {
-    toast("denuncia enviada com sucesso!", { type: "success" });
+    toast("Denúncia/reclamação registrada com sucesso!", { type: "success" });
     handleCancelReport();
   };
 
@@ -634,7 +633,7 @@ export default function DetailPage({ data }: Props) {
                 onClick={handleOpenReportModal}
               >
                 <TriangleAlert className="w-4 h-4 mr-2" />
-                Denunciar estabelecimento
+                Registrar denúncia/reclamação
               </Button>
             </div>
           </div>
@@ -667,7 +666,7 @@ export default function DetailPage({ data }: Props) {
                 onClick={handleOpenReportModal}
               >
                 <TriangleAlert className="w-4 h-4 mr-2" />
-                Denunciar estabelecimento
+                Registrar denúncia/reclamação
               </Button>
             </div>
           </div>
@@ -746,11 +745,11 @@ export default function DetailPage({ data }: Props) {
         </div>
       )}
 
-      {isAuthenticated && isReportModalOpen && (
+      {isReportModalOpen && (
         <div className="fixed inset-0 z-1200 flex items-end sm:items-center justify-center bg-black/45 p-4">
           <Card className="w-full max-w-lg p-4 space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Detalhar denuncia</h3>
+              <h3 className="text-lg font-semibold">Registrar denúncia/reclamação</h3>
               <Button type="button" variant="ghost" onClick={handleCancelReport}>
                 Fechar
               </Button>
@@ -758,7 +757,7 @@ export default function DetailPage({ data }: Props) {
 
             <textarea
               className="w-full min-h-28 rounded-md border border-input bg-transparent px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              placeholder="Descreva o motivo da denuncia..."
+              placeholder="Descreva o motivo da denúncia/reclamação..."
               value={reportDetails}
               onChange={(event) => setReportDetails(event.target.value)}
             />
@@ -767,7 +766,7 @@ export default function DetailPage({ data }: Props) {
               <Button variant="outline" onClick={handleCancelReport}>
                 Cancelar
               </Button>
-              <Button onClick={handleSaveReport}>Salvar denuncia</Button>
+              <Button onClick={handleSaveReport}>Registrar denúncia/reclamação</Button>
             </div>
           </Card>
         </div>
