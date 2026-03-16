@@ -67,6 +67,12 @@ const NearbyPlacesPage = () => {
     navigate(`/nearby?${params.toString()}`);
   };
 
+  const clearFilters = () => {
+    setCategoryFilter("");
+    setSelectedKeywords([]);
+    navigate("/nearby");
+  };
+
   useEffect(() => {
     if (!query && !categoryFilter && selectedKeywords.length === 0) {
       setSearchResults([]);
@@ -140,37 +146,45 @@ const NearbyPlacesPage = () => {
           </div>
 
           <div className="flex flex-col gap-3 pb-2 -mx-6 px-6 scrollbar-hide">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="gap-2 w-fit">
-                  <Funnel className="w-4 h-4" />
-                  {categoryFilter
-                    ? categoryRegistry.find((item) => item.key === categoryFilter)?.label ?? "Categoria"
-                    : "Categoria"}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-56">
-                <DropdownMenuItem
-                  onClick={() => {
-                    setCategoryFilter("");
-                    updateFilters("", undefined);
-                  }}
-                >
-                  Todas categorias
-                </DropdownMenuItem>
-                {categoryRegistry.map((item) => (
+            <div className="flex flex-wrap items-center gap-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="gap-2 w-fit">
+                    <Funnel className="w-4 h-4" />
+                    {categoryFilter
+                      ? categoryRegistry.find((item) => item.key === categoryFilter)?.label ?? "Categoria"
+                      : "Categoria"}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-56">
                   <DropdownMenuItem
-                    key={item.key}
                     onClick={() => {
-                      setCategoryFilter(item.key);
-                      updateFilters(item.key, undefined);
+                      setCategoryFilter("");
+                      updateFilters("", undefined);
                     }}
                   >
-                    {item.label}
+                    Todas categorias
                   </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  {categoryRegistry.map((item) => (
+                    <DropdownMenuItem
+                      key={item.key}
+                      onClick={() => {
+                        setCategoryFilter(item.key);
+                        updateFilters(item.key, undefined);
+                      }}
+                    >
+                      {item.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {(query || categoryFilter || selectedKeywords.length > 0) && (
+                <Button variant="ghost" onClick={clearFilters}>
+                  Limpar filtros
+                </Button>
+              )}
+            </div>
 
             {selectedKeywords.length > 0 && (
               <div className="space-y-2">

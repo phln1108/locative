@@ -1,7 +1,7 @@
 ﻿import { Circle, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { useTheme } from "@/providers/theme-provider";
 import { useGeolocation } from "@/providers/geolocation-provider";
-import { CarFront, Footprints, Loader2 } from "lucide-react";
+import { CarFront, Footprints, Loader2, Navigation2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import MapControls from "./map-controls";
 import RecenterMap from "./recenter-map";
@@ -311,6 +311,23 @@ export default function Map() {
                   >
                     Ver detalhes
                   </button>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => {
+                      const params = new URLSearchParams({
+                        destLat: String(place.coordinates.lat),
+                        destLng: String(place.coordinates.lng),
+                        destId: String(place.id),
+                      });
+                      navigate(`/map?${params.toString()}`);
+                    }}
+                  >
+                    <Navigation2 className="mr-1 h-4 w-4" />
+                    Ver rota
+                  </Button>
                 </div>
               </Popup>
             </CustomMarker>

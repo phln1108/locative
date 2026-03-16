@@ -627,18 +627,16 @@ export default function DetailPage({ data }: Props) {
               </Card>
             ))}
 
-            {isAuthenticated && (
-              <div className="flex justify-end pt-1">
-                <Button
-                  variant="outline"
-                  className="border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
-                  onClick={handleOpenReportModal}
-                >
-                  <TriangleAlert className="w-4 h-4 mr-2" />
-                  Denunciar estabelecimento
-                </Button>
-              </div>
-            )}
+            <div className="flex justify-end pt-1">
+              <Button
+                variant="outline"
+                className="border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
+                onClick={handleOpenReportModal}
+              >
+                <TriangleAlert className="w-4 h-4 mr-2" />
+                Denunciar estabelecimento
+              </Button>
+            </div>
           </div>
         )}
         {mergedReviews.length === 0 && (
@@ -662,18 +660,16 @@ export default function DetailPage({ data }: Props) {
               Nenhuma avaliacao ainda.
             </Card>
 
-            {isAuthenticated && (
-              <div className="flex justify-end pt-1">
-                <Button
-                  variant="outline"
-                  className="border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
-                  onClick={handleOpenReportModal}
-                >
-                  <TriangleAlert className="w-4 h-4 mr-2" />
-                  Denunciar estabelecimento
-                </Button>
-              </div>
-            )}
+            <div className="flex justify-end pt-1">
+              <Button
+                variant="outline"
+                className="border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800"
+                onClick={handleOpenReportModal}
+              >
+                <TriangleAlert className="w-4 h-4 mr-2" />
+                Denunciar estabelecimento
+              </Button>
+            </div>
           </div>
         )}
       </div>
