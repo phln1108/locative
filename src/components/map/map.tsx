@@ -220,7 +220,14 @@ export default function Map() {
 
   return (
     <div className="relative h-full w-full">
-      <MapContainer center={position} zoom={18} zoomControl={false} className="h-full w-full">
+      <MapContainer
+        center={position}
+        zoom={20}
+        minZoom={2}
+        maxZoom={22}
+        zoomControl={false}
+        className="h-full w-full"
+      >
         <SearchBar />
 
         <TileLayer
@@ -229,6 +236,8 @@ export default function Map() {
               ? "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
               : "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
           }
+          maxZoom={22}
+          maxNativeZoom={20}
         />
 
         <TileLayer
@@ -237,6 +246,8 @@ export default function Map() {
               ? "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png"
               : "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png"
           }
+          maxZoom={22}
+          maxNativeZoom={20}
         />
 
         <MapControls getLocation={requestLocation} />
@@ -251,7 +262,7 @@ export default function Map() {
 
             <Circle
               center={userPosition}
-              radius={1000}
+              radius={200}
               pathOptions={{
                 color: "#2563eb",
                 fillColor: "#2563eb",
