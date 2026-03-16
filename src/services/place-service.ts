@@ -1,7 +1,8 @@
 import { locativeService } from "@/services/locative.service";
 import type { Place, PlaceContact } from "@/models/models";
-import type { BackendPoiDTO } from "@/types/locative-query";
+import type { BackendPoiDTO, SearchInputDTO } from "@/types/locative-query";
 import { mapCategoryCodeToCategoryKey } from "@/lib/category-mapping";
+import { getCategoryCodeLabel } from "@/lib/category-code-labels";
 
 function toNumber(value: unknown): number | undefined {
   if (typeof value === "number" && Number.isFinite(value)) return value;
@@ -49,6 +50,70 @@ function parseContacts(value: unknown): PlaceContact[] {
   }
 
   return contacts;
+}
+
+function parseKeywords(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+
+  const keywords: string[] = [];
+  for (const item of value) {
+    const keyword = toNonEmptyString(item);
+    if (keyword) {
+      keywords.push(keyword);
+    }
+  }
+
+  return Array.from(new Set(keywords));
+}
+
+function parseOpeningHours(value: unknown): Place["openingHours"] | undefined {
+  if (!value || typeof value !== "object") return undefined;
+  const record = value as Record<string, unknown>;
+
+  if (record.always_open === true) {
+    return {
+      alwaysOpen: true,
+      timezone: toNonEmptyString(record.timezone),
+      schedule: [],
+    };
+  }
+
+  const scheduleRecord = record.schedule as Record<string, unknown> | undefined;
+  if (!scheduleRecord || typeof scheduleRecord !== "object") return undefined;
+
+  const dayLabels: Record<string, string> = {
+    monday: "Segunda",
+    tuesday: "Terca",
+    wednesday: "Quarta",
+    thursday: "Quinta",
+    friday: "Sexta",
+    saturday: "Sabado",
+    sunday: "Domingo",
+  };
+
+  const schedule = Object.entries(scheduleRecord)
+    .flatMap(([day, intervals]) => {
+      if (!Array.isArray(intervals) || intervals.length === 0) return [];
+      return intervals
+        .map((interval) => {
+          if (typeof interval !== "string" || interval.length < 11 || !interval.includes("-")) {
+            return null;
+          }
+          const [open, close] = interval.split("-");
+          if (!open || !close) return null;
+          return {
+            day: dayLabels[day] ?? day,
+            open,
+            close,
+          };
+        })
+        .filter((item): item is { day: string; open: string; close: string } => Boolean(item));
+    });
+
+  return {
+    timezone: toNonEmptyString(record.timezone),
+    schedule,
+  };
 }
 
 function mapBackendPoiToPlace(
@@ -127,6 +192,8 @@ function mapBackendPoiToPlace(
     (record.endereco as string | undefined) ??
     (record.address as string | undefined);
   const contacts = parseContacts(record.contacts);
+  const keywords = parseKeywords(record.keywords);
+  const openingHours = parseOpeningHours(record.opening_hours_json);
   const primaryPhone = contacts.find((contact) => contact.type === "phone" || contact.type === "whatsapp");
   const primaryWebsite = contacts.find((contact) => contact.type === "website");
   const primaryEmail = contacts.find((contact) => contact.type === "email");
@@ -137,6 +204,7 @@ function mapBackendPoiToPlace(
     title,
     subtitle:
       (record.subtitle as string | undefined) ??
+      getCategoryCodeLabel(categoryCode) ??
       (record.categoria as string | undefined) ??
       (record.category as string | undefined),
     categoryKey: mapCategoryCodeToCategoryKey(categoryCode),
@@ -183,6 +251,8 @@ function mapBackendPoiToPlace(
       email: primaryEmail?.value ?? ((record.email as string | undefined) ?? undefined),
     },
     contacts,
+    keywords,
+    openingHours,
   };
 }
 
@@ -244,6 +314,37 @@ class PlaceService {
 
   async listFavorites() {
     const items = await locativeService.listFavorites();
+    return items
+      .map((item, index) => mapBackendPoiToPlace(item, index))
+      .filter((place): place is Place => Boolean(place));
+  }
+
+  async search(filters: {
+    query?: string;
+    categoryCode?: string;
+    keywords?: string[];
+    limit?: number;
+  }) {
+    const payload: SearchInputDTO = {};
+    const query = filters.query?.trim();
+    const categoryCode = filters.categoryCode?.trim();
+    const keywords =
+      filters.keywords?.map((keyword) => keyword.trim()).filter(Boolean) ?? [];
+
+    if (query) {
+      payload.busca = query;
+    }
+    if (categoryCode) {
+      payload.category_code = categoryCode;
+    }
+    if (keywords.length > 0) {
+      payload.keywords = keywords;
+    }
+    if (typeof filters.limit === "number") {
+      payload.limite = filters.limit;
+    }
+
+    const items = await locativeService.search(payload);
     return items
       .map((item, index) => mapBackendPoiToPlace(item, index))
       .filter((place): place is Place => Boolean(place));

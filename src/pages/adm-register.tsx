@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Search, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -38,6 +38,27 @@ const PRICE_OPTIONS = [
   { value: "3", label: "$$$" },
   { value: "4", label: "$$$$" },
 ] as const;
+const WEEKDAY_OPTIONS = [
+  { key: "monday", label: "Segunda" },
+  { key: "tuesday", label: "Terca" },
+  { key: "wednesday", label: "Quarta" },
+  { key: "thursday", label: "Quinta" },
+  { key: "friday", label: "Sexta" },
+  { key: "saturday", label: "Sabado" },
+  { key: "sunday", label: "Domingo" },
+] as const;
+
+type OpeningDayState = {
+  enabled: boolean;
+  open: string;
+  close: string;
+};
+
+type OpeningHoursFormState = {
+  timezone: string;
+  always_open: boolean;
+  schedule: Record<(typeof WEEKDAY_OPTIONS)[number]["key"], OpeningDayState>;
+};
 
 type FormState = {
   name: string;
@@ -53,11 +74,88 @@ type FormState = {
   address_postal_code: string;
   address_country: string;
   status: string;
-  brand: string;
   price_level: string;
   image_url: string;
+  opening_hours: OpeningHoursFormState;
   contacts: AdminPoiContactInputDTO[];
+  keywords: string[];
 };
+
+function createInitialOpeningHours(): OpeningHoursFormState {
+  return {
+    timezone: "America/Fortaleza",
+    always_open: false,
+    schedule: {
+      monday: { enabled: true, open: "08:00", close: "18:00" },
+      tuesday: { enabled: true, open: "08:00", close: "18:00" },
+      wednesday: { enabled: true, open: "08:00", close: "18:00" },
+      thursday: { enabled: true, open: "08:00", close: "18:00" },
+      friday: { enabled: true, open: "08:00", close: "18:00" },
+      saturday: { enabled: false, open: "09:00", close: "14:00" },
+      sunday: { enabled: false, open: "09:00", close: "14:00" },
+    },
+  };
+}
+
+function parseOpeningHoursFormState(value?: { timezone?: string; always_open?: boolean; schedule?: Record<string, string[]> | null } | null): OpeningHoursFormState {
+  const initial = createInitialOpeningHours();
+  if (!value) return initial;
+
+  if (value.always_open) {
+    return {
+      ...initial,
+      timezone: value.timezone ?? initial.timezone,
+      always_open: true,
+    };
+  }
+
+  const nextSchedule = { ...initial.schedule };
+  for (const day of WEEKDAY_OPTIONS) {
+    const intervals = value.schedule?.[day.key] ?? [];
+    const firstInterval = intervals[0];
+    if (!firstInterval || !firstInterval.includes("-")) {
+      nextSchedule[day.key] = { ...nextSchedule[day.key], enabled: false };
+      continue;
+    }
+
+    const [open, close] = firstInterval.split("-");
+    nextSchedule[day.key] = {
+      enabled: true,
+      open: open || nextSchedule[day.key].open,
+      close: close || nextSchedule[day.key].close,
+    };
+  }
+
+  return {
+    timezone: value.timezone ?? initial.timezone,
+    always_open: false,
+    schedule: nextSchedule,
+  };
+}
+
+function buildOpeningHoursPayload(value: OpeningHoursFormState) {
+  if (value.always_open) {
+    return {
+      timezone: value.timezone.trim() || "America/Fortaleza",
+      always_open: true,
+    };
+  }
+
+  const schedule = Object.fromEntries(
+    WEEKDAY_OPTIONS.map((day) => {
+      const item = value.schedule[day.key];
+      if (!item.enabled || !item.open || !item.close) {
+        return [day.key, []];
+      }
+      return [day.key, [`${item.open}-${item.close}`]];
+    })
+  );
+
+  return {
+    timezone: value.timezone.trim() || "America/Fortaleza",
+    schedule,
+  };
+}
 
 function createEmptyContact(): AdminPoiContactInputDTO {
   return {
@@ -82,10 +180,11 @@ const initialState: FormState = {
   address_postal_code: "",
   address_country: "BR",
   status: "active",
-  brand: "",
   price_level: "none",
   image_url: "",
+  opening_hours: createInitialOpeningHours(),
   contacts: [],
+  keywords: [],
 };
 
 const CATEGORY_OPTIONS = categoryRegistry.map((category) => category.key);
@@ -99,6 +198,9 @@ export default function AdminPoiRegisterPage() {
   const [loading, setLoading] = useState(false);
   const [bootstrapping, setBootstrapping] = useState(isEditing);
   const [descriptionMode, setDescriptionMode] = useState<"edit" | "preview">("edit");
+  const [keywordQuery, setKeywordQuery] = useState("");
+  const [keywordSuggestions, setKeywordSuggestions] = useState<string[]>([]);
+  const [highlightedKeywordIndex, setHighlightedKeywordIndex] = useState(0);
 
   useEffect(() => {
     if (!isEditing) {
@@ -125,9 +227,9 @@ export default function AdminPoiRegisterPage() {
           address_postal_code: item.address_postal_code ?? "",
           address_country: item.address_country ?? "BR",
           status: item.status ?? "active",
-          brand: item.brand ?? "",
           price_level: item.price_level === null || item.price_level === undefined ? "none" : String(item.price_level),
           image_url: item.image_url ?? "",
+          opening_hours: parseOpeningHoursFormState(item.opening_hours_json),
           contacts:
             item.contacts?.map((contact) => ({
               contact_type: contact.contact_type,
@@ -135,6 +237,7 @@ export default function AdminPoiRegisterPage() {
               label: contact.label ?? "",
               is_primary: contact.is_primary,
             })) ?? [],
+          keywords: item.keywords ?? [],
         });
       } catch {
         toast("Nao foi possivel carregar o estabelecimento para edicao.", { type: "error" });
@@ -199,6 +302,122 @@ export default function AdminPoiRegisterPage() {
     }));
   };
 
+  const updateOpeningHoursDay = (
+    day: (typeof WEEKDAY_OPTIONS)[number]["key"],
+    field: keyof OpeningDayState,
+    value: string | boolean
+  ) => {
+    setForm((current) => ({
+      ...current,
+      opening_hours: {
+        ...current.opening_hours,
+        schedule: {
+          ...current.opening_hours.schedule,
+          [day]: {
+            ...current.opening_hours.schedule[day],
+            [field]: value,
+          },
+        },
+      },
+    }));
+  };
+
+  const normalizedSuggestions = useMemo(
+    () =>
+      keywordSuggestions.filter(
+        (keyword) => !form.keywords.some((selected) => selected.toLowerCase() === keyword.toLowerCase())
+      ),
+    [form.keywords, keywordSuggestions]
+  );
+
+  useEffect(() => {
+    const query = keywordQuery.trim();
+    if (!query) {
+      setKeywordSuggestions([]);
+      setHighlightedKeywordIndex(0);
+      return;
+    }
+
+    let cancelled = false;
+    const timeoutId = window.setTimeout(async () => {
+      try {
+        const keywords = await locativeService.listKeywords(query);
+        if (!cancelled) {
+          setKeywordSuggestions(keywords);
+          setHighlightedKeywordIndex(0);
+        }
+      } catch {
+        if (!cancelled) {
+          setKeywordSuggestions([]);
+          setHighlightedKeywordIndex(0);
+        }
+      }
+    }, 180);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeoutId);
+    };
+  }, [keywordQuery]);
+
+  const addKeyword = (value: string) => {
+    const normalized = value.trim().toLowerCase();
+    if (!normalized) return;
+
+    setForm((current) => {
+      if (current.keywords.some((keyword) => keyword.toLowerCase() === normalized)) {
+        return current;
+      }
+
+      return {
+        ...current,
+        keywords: [...current.keywords, normalized],
+      };
+    });
+    setKeywordQuery("");
+    setKeywordSuggestions([]);
+    setHighlightedKeywordIndex(0);
+  };
+
+  const removeKeyword = (keywordToRemove: string) => {
+    setForm((current) => ({
+      ...current,
+      keywords: current.keywords.filter((keyword) => keyword !== keywordToRemove),
+    }));
+  };
+
+  const handleKeywordKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "ArrowDown") {
+      if (normalizedSuggestions.length === 0) return;
+      event.preventDefault();
+      setHighlightedKeywordIndex((current) =>
+        current >= normalizedSuggestions.length - 1 ? 0 : current + 1
+      );
+      return;
+    }
+
+    if (event.key === "ArrowUp") {
+      if (normalizedSuggestions.length === 0) return;
+      event.preventDefault();
+      setHighlightedKeywordIndex((current) =>
+        current <= 0 ? normalizedSuggestions.length - 1 : current - 1
+      );
+      return;
+    }
+
+    if (event.key === "Escape") {
+      setKeywordSuggestions([]);
+      setHighlightedKeywordIndex(0);
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === ",") {
+      event.preventDefault();
+      const highlightedKeyword = normalizedSuggestions[highlightedKeywordIndex];
+      addKeyword(highlightedKeyword ?? keywordQuery);
+    }
+  };
+
   const submit = async () => {
     const latitude = Number(form.latitude);
     const longitude = Number(form.longitude);
@@ -229,9 +448,9 @@ export default function AdminPoiRegisterPage() {
         address_postal_code: form.address_postal_code.trim() || undefined,
         address_country: form.address_country.trim() || undefined,
         status: form.status,
-        brand: form.brand.trim() || undefined,
         price_level: form.price_level === "none" ? undefined : Number(form.price_level),
         image_url: form.image_url.trim() || undefined,
+        opening_hours_json: buildOpeningHoursPayload(form.opening_hours),
         contacts: form.contacts
           .map((contact) => ({
             contact_type: contact.contact_type,
@@ -240,6 +459,7 @@ export default function AdminPoiRegisterPage() {
             is_primary: contact.is_primary,
           }))
           .filter((contact) => contact.contact_value),
+        keywords: form.keywords,
       };
 
       if (isEditing) {
@@ -406,11 +626,6 @@ export default function AdminPoiRegisterPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="brand">Marca</Label>
-                  <Input id="brand" value={form.brand} onChange={(event) => updateField("brand", event.target.value)} />
-                </div>
-
-                <div className="space-y-2">
                   <Label>Nivel de preco</Label>
                   <Select value={form.price_level} onValueChange={(value) => updateField("price_level", value)}>
                     <SelectTrigger className="w-full">
@@ -429,6 +644,149 @@ export default function AdminPoiRegisterPage() {
                 <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="image">URL da imagem</Label>
                   <Input id="image" value={form.image_url} onChange={(event) => updateField("image_url", event.target.value)} />
+                </div>
+
+                <div className="space-y-4 md:col-span-2">
+                  <div className="flex items-center justify-between gap-3">
+                    <Label>Horario de funcionamento</Label>
+                    <div className="flex items-center gap-3">
+                      <Checkbox
+                        id="always-open"
+                        checked={form.opening_hours.always_open}
+                        onCheckedChange={(checked) =>
+                          setForm((current) => ({
+                            ...current,
+                            opening_hours: {
+                              ...current.opening_hours,
+                              always_open: checked === true,
+                            },
+                          }))
+                        }
+                      />
+                      <Label htmlFor="always-open">Funciona 24h</Label>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="timezone">Timezone</Label>
+                    <Input
+                      id="timezone"
+                      value={form.opening_hours.timezone}
+                      onChange={(event) =>
+                        setForm((current) => ({
+                          ...current,
+                          opening_hours: {
+                            ...current.opening_hours,
+                            timezone: event.target.value,
+                          },
+                        }))
+                      }
+                    />
+                  </div>
+
+                  {!form.opening_hours.always_open && (
+                    <div className="space-y-3 rounded-xl border p-4">
+                      {WEEKDAY_OPTIONS.map((day) => {
+                        const dayState = form.opening_hours.schedule[day.key];
+                        return (
+                          <div key={day.key} className="grid gap-3 md:grid-cols-[160px_1fr_1fr] md:items-center">
+                            <div className="flex items-center gap-3">
+                              <Checkbox
+                                id={`opening-${day.key}`}
+                                checked={dayState.enabled}
+                                onCheckedChange={(checked) => updateOpeningHoursDay(day.key, "enabled", checked === true)}
+                              />
+                              <Label htmlFor={`opening-${day.key}`}>{day.label}</Label>
+                            </div>
+
+                            <Input
+                              type="text"
+                              value={dayState.open}
+                              disabled={!dayState.enabled}
+                              inputMode="numeric"
+                              placeholder="08:00"
+                              maxLength={5}
+                              onChange={(event) => updateOpeningHoursDay(day.key, "open", event.target.value)}
+                            />
+
+                            <Input
+                              type="text"
+                              value={dayState.close}
+                              disabled={!dayState.enabled}
+                              inputMode="numeric"
+                              placeholder="18:00"
+                              maxLength={5}
+                              onChange={(event) => updateOpeningHoursDay(day.key, "close", event.target.value)}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-4 md:col-span-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="keywords">Palavras-chave</Label>
+                    <div className="relative">
+                      <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        id="keywords"
+                        value={keywordQuery}
+                        onChange={(event) => setKeywordQuery(event.target.value)}
+                        onKeyDown={handleKeywordKeyDown}
+                        placeholder="Digite e pressione Enter para adicionar"
+                        className="pl-9"
+                      />
+
+                      {normalizedSuggestions.length > 0 && (
+                        <div className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-20 overflow-hidden rounded-xl border bg-background shadow-lg">
+                          {normalizedSuggestions.map((keyword, index) => (
+                            <button
+                              key={keyword}
+                              type="button"
+                              onClick={() => addKeyword(keyword)}
+                              onMouseEnter={() => setHighlightedKeywordIndex(index)}
+                              className={[
+                                "flex w-full items-center px-3 py-2 text-left text-sm transition",
+                                highlightedKeywordIndex === index ? "bg-muted" : "hover:bg-muted",
+                              ].join(" ")}
+                            >
+                              {keyword}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Sugestoes usam palavras ja cadastradas. Se nao existir, ela sera criada ao salvar.
+                    </p>
+                  </div>
+
+                  {form.keywords.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {form.keywords.map((keyword) => (
+                        <div
+                          key={keyword}
+                          className="inline-flex items-center gap-2 rounded-full border bg-muted/40 px-3 py-1 text-sm"
+                        >
+                          <span>{keyword}</span>
+                          <button
+                            type="button"
+                            onClick={() => removeKeyword(keyword)}
+                            className="text-muted-foreground transition hover:text-foreground"
+                            aria-label={`Remover ${keyword}`}
+                          >
+                            <X className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+                      Nenhuma palavra-chave adicionada.
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-4 md:col-span-2">

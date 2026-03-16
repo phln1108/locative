@@ -1,7 +1,7 @@
 ﻿import { Circle, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import { useTheme } from "@/providers/theme-provider";
 import { useGeolocation } from "@/providers/geolocation-provider";
-import { Loader2 } from "lucide-react";
+import { CarFront, Footprints, Loader2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import MapControls from "./map-controls";
 import RecenterMap from "./recenter-map";
@@ -16,6 +16,7 @@ import type { BackendPoiDTO } from "@/types/locative-query";
 import { mockedElements } from "@/data/mocked-elements";
 import CategoryImage from "@/components/ui/category-image";
 import { mapCategoryCodeToCategoryKey } from "@/lib/category-mapping";
+import { getCategoryCodeLabel } from "@/lib/category-code-labels";
 
 import "@/lib/map-icons";
 import SearchBar from "../navigation/search-bar";
@@ -116,6 +117,7 @@ function mapBackendPoiToMapPlace(poi: BackendPoiDTO, index: number): MapPlace | 
     (record.category as string | undefined) ??
     (record.tipo as string | undefined) ??
     "";
+  const localizedSubtitle = subtitle ? getCategoryCodeLabel(subtitle) : "";
 
   const image =
     toNonEmptyString(record.image_url) ??
@@ -146,7 +148,7 @@ function mapBackendPoiToMapPlace(poi: BackendPoiDTO, index: number): MapPlace | 
     id,
     type,
     title,
-    subtitle,
+    subtitle: localizedSubtitle,
     images: [image ?? ""],
     coordinates: coords,
     distance,
@@ -162,6 +164,7 @@ export default function Map() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [showNearbyPlaces, setShowNearbyPlaces] = useState(false);
+  const [routeProfile, setRouteProfile] = useState<"walking" | "driving">("walking");
 
   const { data: backendPois } = useLocativeElements({
     latitude: position[0],
@@ -217,7 +220,7 @@ export default function Map() {
 
   return (
     <div className="relative h-full w-full">
-      <MapContainer center={position} zoom={15} zoomControl={false} className="h-full w-full">
+      <MapContainer center={position} zoom={18} zoomControl={false} className="h-full w-full">
         <SearchBar />
 
         <TileLayer
@@ -238,7 +241,7 @@ export default function Map() {
 
         <MapControls getLocation={requestLocation} />
         <RecenterMap position={position} />
-        <RoutingMachine start={position} end={destination} />
+        <RoutingMachine start={position} end={destination} profile={routeProfile} />
 
         {userPosition && (
           <>
@@ -318,6 +321,33 @@ export default function Map() {
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center bg-background/10 backdrop-blur-sm z-50">
           <Loader2 className="animate-spin text-primary" size={32} />
+        </div>
+      )}
+
+      {destination && (
+        <div className="absolute top-20 right-4 z-1000 rounded-2xl border bg-background/90 p-1 shadow-lg backdrop-blur-sm">
+          <div className="flex gap-1">
+            <Button
+              type="button"
+              size="icon"
+              variant={routeProfile === "walking" ? "default" : "ghost"}
+              onClick={() => setRouteProfile("walking")}
+              aria-label="Rota a pe"
+              title="Rota a pe"
+            >
+              <Footprints className="h-4 w-4" />
+            </Button>
+            <Button
+              type="button"
+              size="icon"
+              variant={routeProfile === "driving" ? "default" : "ghost"}
+              onClick={() => setRouteProfile("driving")}
+              aria-label="Rota de carro"
+              title="Rota de carro"
+            >
+              <CarFront className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       )}
 

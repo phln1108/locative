@@ -8,9 +8,10 @@ type Coordinates = [number, number];
 interface RoutingMachineProps {
   start: Coordinates | null;
   end: Coordinates | null;
+  profile: "walking" | "driving";
 }
 
-export default function RoutingMachine({ start, end }: RoutingMachineProps) {
+export default function RoutingMachine({ start, end, profile }: RoutingMachineProps) {
   const map = useMap();
 
   useEffect(() => {
@@ -21,7 +22,7 @@ export default function RoutingMachine({ start, end }: RoutingMachineProps) {
 
     const router = routing.osrmv1({
       serviceUrl: "https://router.project-osrm.org/route/v1",
-      profile: "foot",
+      profile,
     });
 
     const control = routing.control({
@@ -46,7 +47,7 @@ export default function RoutingMachine({ start, end }: RoutingMachineProps) {
         // ignore remove errors during map teardown
       }
     };
-  }, [end, map, start]);
+  }, [end, map, profile, start]);
 
   return null;
 }

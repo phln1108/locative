@@ -83,6 +83,10 @@ export const locativeService = {
     return locativeApi.updateAdminPoi(poiId, payload);
   },
 
+  async listKeywords(query?: string): Promise<string[]> {
+    return locativeApi.listKeywords(query);
+  },
+
   logout() {
     setHttpAuthToken(null);
   },

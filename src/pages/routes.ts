@@ -15,6 +15,7 @@ import CategoryCardsPage from "./category-cards";
 import ReviewsPage from "./reviews";
 import AdminPoiListPage from "./adm-list";
 import AdminPoiRegisterPage from "./adm-register";
+import SearchPage from "./search";
 
 
 const router = createBrowserRouter([
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
             {
                 path: "adm/register",
                 Component: AdminPoiRegisterPage
+            },
+            {
+                path: "search",
+                Component: SearchPage
             },
         ]
     },

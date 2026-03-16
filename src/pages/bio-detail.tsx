@@ -408,6 +408,19 @@ export default function DetailPage({ data }: Props) {
           </div>
         )}
 
+        {data.keywords?.length ? (
+          <div className="space-y-3">
+            <h2 className="text-xl font-semibold">Palavras-chave</h2>
+            <div className="flex flex-wrap gap-2">
+              {data.keywords.map((keyword) => (
+                <Badge key={keyword} variant="secondary">
+                  {keyword}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
         {contacts.length > 0 && (
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Contatos</h2>
@@ -471,19 +484,23 @@ export default function DetailPage({ data }: Props) {
           </div>
         )}
 
-        {data.openingHours?.schedule?.length && (
+        {(data.openingHours?.alwaysOpen || data.openingHours?.schedule?.length) && (
           <div className="space-y-2">
             <h2 className="text-xl font-semibold">Horario</h2>
-            <div className="space-y-1 text-sm">
-              {data.openingHours.schedule.map((s) => (
-                <div key={s.day} className="flex justify-between">
-                  <span>{s.day}</span>
-                  <span>
-                    {s.open} - {s.close}
-                  </span>
-                </div>
-              ))}
-            </div>
+            {data.openingHours?.alwaysOpen ? (
+              <p className="text-sm text-muted-foreground">Aberto 24 horas.</p>
+            ) : (
+              <div className="space-y-1 text-sm">
+                {data.openingHours?.schedule.map((s) => (
+                  <div key={`${s.day}-${s.open}-${s.close}`} className="flex justify-between">
+                    <span>{s.day}</span>
+                    <span>
+                      {s.open} - {s.close}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 

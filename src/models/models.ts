@@ -1,4 +1,6 @@
 export interface OpeningHours {
+  alwaysOpen?: boolean;
+  timezone?: string;
   openNow?: boolean;
   schedule: {
     day: string;
@@ -75,6 +77,7 @@ export interface Place {
 
   contact?: ContactInfo;
   contacts?: PlaceContact[];
+  keywords?: string[];
 
   openingHours?: OpeningHours;
 

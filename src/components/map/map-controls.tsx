@@ -12,7 +12,7 @@ export default function MapControls({ getLocation }: Props) {
     const handleRecenter = async () => {
         const coords = await getLocation();
         if (coords) {
-            map.setView(coords, 16, { animate: true });
+            map.setView(coords, 18, { animate: true });
         }
     };
 

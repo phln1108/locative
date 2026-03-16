@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import CategoryImage from "@/components/ui/category-image";
 import { Separator } from "@/components/ui/separator";
+import { getCategoryCodeLabel } from "@/lib/category-code-labels";
 import { locativeService } from "@/services/locative.service";
 import type { AdminPoiListItemDTO } from "@/types/locative-query";
 import { Edit, ImageIcon, MapPin, Tag } from "lucide-react";
@@ -99,7 +100,7 @@ export default function AdminPoiListPage() {
                   fallbackClassName="h-full w-full"
                 />
                 <div className="absolute left-3 top-3 flex gap-2">
-                  <Badge variant="secondary">{item.category_code}</Badge>
+                  <Badge variant="secondary">{getCategoryCodeLabel(item.category_code)}</Badge>
                   <Badge variant={item.status === "active" ? "default" : "outline"}>
                     {item.status}
                   </Badge>

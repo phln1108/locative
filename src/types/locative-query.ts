@@ -39,7 +39,9 @@ export interface AdminPoiListItemDTO {
   brand?: string | null;
   price_level?: number | null;
   image_url?: string | null;
+  opening_hours_json?: AdminOpeningHoursDTO | null;
   contacts: AdminPoiContactDTO[];
+  keywords: string[];
   created_at: string;
   updated_at: string;
 }
@@ -70,7 +72,15 @@ export interface AdminPoiCreateInputDTO {
   brand?: string;
   price_level?: number;
   image_url?: string;
+  opening_hours_json?: AdminOpeningHoursDTO;
   contacts: AdminPoiContactInputDTO[];
+  keywords: string[];
+}
+
+export interface AdminOpeningHoursDTO {
+  timezone?: string;
+  always_open?: boolean;
+  schedule?: Record<string, string[]>;
 }
 
 export interface AdminPoiContactInputDTO {
@@ -102,7 +112,9 @@ export interface CoordinatesInputDTO {
 }
 
 export interface SearchInputDTO {
-  busca: string;
+  busca?: string;
+  category_code?: string;
+  keywords?: string[];
   limite?: number;
 }
 

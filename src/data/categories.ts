@@ -26,13 +26,6 @@ export const categoryRegistry: Category[] = [
     icon: Utensils,
   },
   {
-    key: "shopping",
-    label: "Comércio e varejo",
-    emoji: "🛍️",
-    color: "rgba(236,72,153,0.15)",
-    icon: ShoppingBag,
-  },
-  {
     key: "retail",
     label: "Comércio e varejo",
     emoji: "🛍️",
@@ -41,7 +34,7 @@ export const categoryRegistry: Category[] = [
   },
   {
     key: "shopping_center",
-    label: "Shopping center",
+    label: "Centro de compras",
     emoji: "🏬",
     color: "rgba(219,39,119,0.15)",
     icon: ShoppingBag,

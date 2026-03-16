@@ -5,7 +5,7 @@ export const CATEGORY_CODE_ALIASES: Record<string, string> = {
   private_food_and_beverage: "food",
   food_beverage: "food",
   pois_privados_alimentacao_gastronomia_e_bebidas: "food",
-  shopping: "shopping",
+  shopping: "retail",
   private_retail: "retail",
   pois_privados_compras_e_varejo: "retail",
   pois_privado_compras_e_varejo: "retail",
@@ -86,9 +86,5 @@ export function getCategoryCodeLabelFromRegistry(categoryCode?: string | null): 
 
   if (category) return category.label;
 
-  return categoryKey
-    .split("_")
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
+  return "Sem categoria";
 }

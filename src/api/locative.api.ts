@@ -70,6 +70,13 @@ export const locativeApi = {
     return data;
   },
 
+  async listKeywords(query?: string) {
+    const { data } = await http.get<string[]>("/internal/keywords", {
+      params: query ? { q: query } : undefined,
+    });
+    return data;
+  },
+
   async pontosProximos(payload: CoordinatesInputDTO) {
     const { data } = await http.post<BackendPoiDTO[] | Record<string, unknown>>(
       "/pontos_proximos",
