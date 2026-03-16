@@ -31,7 +31,10 @@ export default function RoutingMachine({ start, end, profile }: RoutingMachinePr
       routeWhileDragging: false,
       addWaypoints: false,
       draggableWaypoints: false,
-      fitSelectedRoutes: true,
+      fitSelectedRoutes: {
+        maxZoom: 16,
+        padding: [48, 48],
+      },
       show: false,
       lineOptions: {
         styles: [{ color: "#2563eb", opacity: 0.85, weight: 6 }],
