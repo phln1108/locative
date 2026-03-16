@@ -87,6 +87,10 @@ export const locativeService = {
     return locativeApi.updateAdminPoi(poiId, payload);
   },
 
+  async deleteAdminPoi(poiId: number): Promise<void> {
+    return locativeApi.deleteAdminPoi(poiId);
+  },
+
   async listAdminEvents(): Promise<AdminEventListItemDTO[]> {
     return locativeApi.listAdminEvents();
   },
@@ -104,6 +108,10 @@ export const locativeService = {
     payload: AdminEventCreateInputDTO
   ): Promise<AdminEventUpdateOutputDTO> {
     return locativeApi.updateAdminEvent(eventId, payload);
+  },
+
+  async deleteAdminEvent(eventId: number): Promise<void> {
+    return locativeApi.deleteAdminEvent(eventId);
   },
 
   async listKeywords(query?: string): Promise<string[]> {

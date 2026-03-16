@@ -74,6 +74,10 @@ export const locativeApi = {
     return data;
   },
 
+  async deleteAdminPoi(poiId: number) {
+    await http.delete(`/internal/pois/${poiId}`);
+  },
+
   async listAdminEvents() {
     const { data } = await http.get<AdminEventListItemDTO[]>("/internal/events");
     return data;
@@ -102,6 +106,10 @@ export const locativeApi = {
       },
     });
     return data;
+  },
+
+  async deleteAdminEvent(eventId: number) {
+    await http.delete(`/internal/events/${eventId}`);
   },
 
   async listKeywords(query?: string) {

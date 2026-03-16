@@ -301,6 +301,7 @@ export default function AdminPoiRegisterPage() {
   const [locativeType, setLocativeType] = useState<"poi" | "event">(initialType);
   const [form, setForm] = useState<FormState>(initialState);
   const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [bootstrapping, setBootstrapping] = useState(isEditing);
   const [descriptionMode, setDescriptionMode] = useState<"edit" | "preview">("edit");
   const [keywordQuery, setKeywordQuery] = useState("");
@@ -759,6 +760,40 @@ export default function AdminPoiRegisterPage() {
       );
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!isEditing) return;
+
+    const isEvent = isEditingEvent && locativeType === "event";
+    const confirmed = window.confirm(
+      isEvent
+        ? "Tem certeza que deseja excluir este evento? Esta acao nao pode ser desfeita."
+        : "Tem certeza que deseja excluir este estabelecimento? Esta acao nao pode ser desfeita."
+    );
+    if (!confirmed) return;
+
+    try {
+      setDeleting(true);
+      if (isEvent) {
+        await locativeService.deleteAdminEvent(eventId);
+        toast("Evento excluido com sucesso.", { type: "success" });
+        navigate("/adm/list?type=event");
+      } else if (isEditingPoi) {
+        await locativeService.deleteAdminPoi(poiId);
+        toast("Estabelecimento excluido com sucesso.", { type: "success" });
+        navigate("/adm/list");
+      }
+    } catch {
+      toast(
+        isEvent
+          ? "Nao foi possivel excluir o evento."
+          : "Nao foi possivel excluir o estabelecimento.",
+        { type: "error" }
+      );
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -1291,21 +1326,40 @@ export default function AdminPoiRegisterPage() {
                 </div>
               </div>
 
-              <div className="mt-6 flex justify-end gap-3">
-                <Button variant="outline" asChild>
-                  <Link to="/adm/list">Cancelar</Link>
-                </Button>
-                <Button onClick={submit} disabled={loading}>
-                  {loading
-                    ? "Salvando..."
-                    : locativeType === "event"
-                      ? isEditingEvent
-                        ? "Salvar alteracoes"
-                        : "Criar evento"
-                      : isEditingPoi
-                        ? "Salvar alteracoes"
-                        : "Criar estabelecimento"}
-                </Button>
+              <div className="mt-6 flex items-center justify-between gap-3">
+                <div>
+                  {isEditing ? (
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      onClick={handleDelete}
+                      disabled={loading || deleting}
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      {deleting
+                        ? "Excluindo..."
+                        : locativeType === "event"
+                          ? "Excluir evento"
+                          : "Excluir estabelecimento"}
+                    </Button>
+                  ) : null}
+                </div>
+                <div className="flex gap-3">
+                  <Button variant="outline" asChild>
+                    <Link to="/adm/list">Cancelar</Link>
+                  </Button>
+                  <Button onClick={submit} disabled={loading || deleting}>
+                    {loading
+                      ? "Salvando..."
+                      : locativeType === "event"
+                        ? isEditingEvent
+                          ? "Salvar alteracoes"
+                          : "Criar evento"
+                        : isEditingPoi
+                          ? "Salvar alteracoes"
+                          : "Criar estabelecimento"}
+                  </Button>
+                </div>
               </div>
             </>
           )}
