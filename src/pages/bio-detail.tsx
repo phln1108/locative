@@ -464,6 +464,63 @@ export default function DetailPage({ data }: Props) {
           </div>
         )}
 
+        {(data.eventInfo?.startsAt ||
+          data.eventInfo?.endsAt ||
+          data.eventInfo?.recurrence ||
+          typeof data.eventInfo?.capacity === "number") && (
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold">Informações do evento</h2>
+            <div className="space-y-1 text-sm">
+              {data.eventInfo?.startsAt && (
+                <div className="flex justify-between gap-4">
+                  <span className="text-muted-foreground">Início</span>
+                  <span>{data.eventInfo.startsAt}</span>
+                </div>
+              )}
+              {data.eventInfo?.endsAt && (
+                <div className="flex justify-between gap-4">
+                  <span className="text-muted-foreground">Fim</span>
+                  <span>{data.eventInfo.endsAt}</span>
+                </div>
+              )}
+              {typeof data.eventInfo?.capacity === "number" && (
+                <div className="flex justify-between gap-4">
+                  <span className="text-muted-foreground">Capacidade</span>
+                  <span>{data.eventInfo.capacity} pessoas</span>
+                </div>
+              )}
+              {data.eventInfo?.recurrence && (
+                <div className="flex justify-between gap-4">
+                  <span className="text-muted-foreground">Recorrência</span>
+                  <span className="text-right">{data.eventInfo.recurrence}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {data.eventInfo?.organizerItems?.length ? (
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold">Organização</h2>
+            <div className="space-y-1 text-sm text-muted-foreground">
+              {data.eventInfo.organizerItems.map((item) => (
+                <p key={item}>{item}</p>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {data.eventInfo?.ticketItems?.length ? (
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold">Ingressos</h2>
+            <div className="space-y-1 text-sm text-muted-foreground">
+              {data.eventInfo.ticketItems.map((item) => (
+                <p key={item}>{item}</p>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
         {data.amenities?.length && (
           <div className="space-y-2">
             <h2 className="text-xl font-semibold">Comodidades</h2>

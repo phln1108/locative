@@ -1,5 +1,9 @@
 import { http } from "./http-client";
 import type {
+  AdminEventCreateInputDTO,
+  AdminEventCreateOutputDTO,
+  AdminEventListItemDTO,
+  AdminEventUpdateOutputDTO,
   AdminPoiCreateInputDTO,
   AdminPoiCreateOutputDTO,
   AdminPoiListItemDTO,
@@ -62,6 +66,36 @@ export const locativeApi = {
 
   async updateAdminPoi(poiId: number, payload: AdminPoiCreateInputDTO) {
     const { data } = await http.put<AdminPoiUpdateOutputDTO>(`/internal/pois/${poiId}`, payload, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    return data;
+  },
+
+  async listAdminEvents() {
+    const { data } = await http.get<AdminEventListItemDTO[]>("/internal/events");
+    return data;
+  },
+
+  async createAdminEvent(payload: AdminEventCreateInputDTO) {
+    const { data } = await http.post<AdminEventCreateOutputDTO>("/internal/events", payload, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    return data;
+  },
+
+  async getAdminEvent(eventId: number) {
+    const { data } = await http.get<AdminEventListItemDTO>(`/internal/events/${eventId}`);
+    return data;
+  },
+
+  async updateAdminEvent(eventId: number, payload: AdminEventCreateInputDTO) {
+    const { data } = await http.put<AdminEventUpdateOutputDTO>(`/internal/events/${eventId}`, payload, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",

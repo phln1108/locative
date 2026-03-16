@@ -34,7 +34,7 @@ export default function NotFound() {
             to="/login"
             className="inline-flex items-center gap-2 rounded-md border px-4 py-2 hover:bg-muted transition"
           >
-            Login
+            Entrar
           </Link>
         </div>
       </div>

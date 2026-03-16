@@ -1,6 +1,10 @@
 import { locativeApi } from "@/api/locative.api";
 import { setHttpAuthToken } from "@/api/http-client";
 import type {
+  AdminEventCreateInputDTO,
+  AdminEventCreateOutputDTO,
+  AdminEventListItemDTO,
+  AdminEventUpdateOutputDTO,
   AdminPoiCreateInputDTO,
   AdminPoiCreateOutputDTO,
   AdminPoiListItemDTO,
@@ -81,6 +85,25 @@ export const locativeService = {
     payload: AdminPoiCreateInputDTO
   ): Promise<AdminPoiUpdateOutputDTO> {
     return locativeApi.updateAdminPoi(poiId, payload);
+  },
+
+  async listAdminEvents(): Promise<AdminEventListItemDTO[]> {
+    return locativeApi.listAdminEvents();
+  },
+
+  async createAdminEvent(payload: AdminEventCreateInputDTO): Promise<AdminEventCreateOutputDTO> {
+    return locativeApi.createAdminEvent(payload);
+  },
+
+  async getAdminEvent(eventId: number): Promise<AdminEventListItemDTO> {
+    return locativeApi.getAdminEvent(eventId);
+  },
+
+  async updateAdminEvent(
+    eventId: number,
+    payload: AdminEventCreateInputDTO
+  ): Promise<AdminEventUpdateOutputDTO> {
+    return locativeApi.updateAdminEvent(eventId, payload);
   },
 
   async listKeywords(query?: string): Promise<string[]> {

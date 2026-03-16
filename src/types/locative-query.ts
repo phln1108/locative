@@ -77,6 +77,73 @@ export interface AdminPoiCreateInputDTO {
   keywords: string[];
 }
 
+export interface AdminEventListItemDTO {
+  id: number;
+  name: string;
+  description?: string | null;
+  status: string;
+  category_code?: string | null;
+  latitude: number;
+  longitude: number;
+  address_street?: string | null;
+  address_number?: string | null;
+  address_neighborhood?: string | null;
+  address_city?: string | null;
+  address_state?: string | null;
+  address_postal_code?: string | null;
+  address_country?: string | null;
+  kind?: string | null;
+  start_datetime?: string | null;
+  end_datetime?: string | null;
+  organizer_json?: Record<string, unknown> | null;
+  recurrence_rule?: string | null;
+  ticketing_json?: Record<string, unknown> | null;
+  capacity?: number | null;
+  image_url?: string | null;
+  contacts: AdminPoiContactDTO[];
+  keywords: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AdminEventCreateInputDTO {
+  name: string;
+  description?: string;
+  latitude: number;
+  longitude: number;
+  address_street?: string;
+  address_number?: string;
+  address_neighborhood?: string;
+  address_city?: string;
+  address_state?: string;
+  address_postal_code?: string;
+  address_country?: string;
+  status?: string;
+  category_code?: string;
+  kind?: string;
+  start_datetime?: string;
+  end_datetime?: string;
+  organizer_json?: Record<string, unknown>;
+  recurrence_rule?: string;
+  ticketing_json?: Record<string, unknown>;
+  capacity?: number;
+  image_url?: string;
+  contacts: AdminPoiContactInputDTO[];
+  keywords: string[];
+}
+
+export interface AdminEventCreateOutputDTO {
+  id: number;
+  name: string;
+  status: string;
+}
+
+export interface AdminEventUpdateOutputDTO {
+  id: number;
+  name: string;
+  status: string;
+}
+
 export interface AdminOpeningHoursDTO {
   timezone?: string;
   always_open?: boolean;

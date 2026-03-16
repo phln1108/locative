@@ -55,8 +55,8 @@ const HomePage = () => {
       {(loading || nearbyPlaces.length > 0) && (
         <section className="space-y-4">
           <SectionHeader
-            title="Lugares próximos"
-            description="Descubra servicos e lugares perto de você"
+            title="Lugares e eventos próximos"
+            description="Descubra servicos, estabelecimentos e eventos perto de você"
             actionLabel="Ver mais"
             onAction={() => navigate("/nearby")}
           />

@@ -104,4 +104,13 @@ export interface Place {
     label: string;
     value?: string;
   }[];
+
+  eventInfo?: {
+    startsAt?: string;
+    endsAt?: string;
+    recurrence?: string;
+    capacity?: number;
+    organizerItems?: string[];
+    ticketItems?: string[];
+  };
 }

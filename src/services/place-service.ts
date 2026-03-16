@@ -1,7 +1,7 @@
 import { locativeService } from "@/services/locative.service";
 import type { Place, PlaceContact } from "@/models/models";
-import type { BackendPoiDTO, SearchInputDTO } from "@/types/locative-query";
-import { mapCategoryCodeToCategoryKey } from "@/lib/category-mapping";
+import type { AdminEventListItemDTO, BackendPoiDTO, SearchInputDTO } from "@/types/locative-query";
+import { mapDbClassificationToCategoryKey } from "@/lib/category-mapping";
 import { getCategoryCodeLabel } from "@/lib/category-code-labels";
 
 function toNumber(value: unknown): number | undefined {
@@ -24,6 +24,51 @@ function formatDistanceFromMeters(value: unknown): string | undefined {
   if (distanceMeters === undefined) return undefined;
   if (distanceMeters < 1000) return `${Math.round(distanceMeters)} m`;
   return `${(distanceMeters / 1000).toFixed(1)} km`;
+}
+
+function computeDistanceMeters(
+  lat1: number,
+  lng1: number,
+  lat2: number,
+  lng2: number
+): number {
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+  const earthRadiusMeters = 6371000;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return earthRadiusMeters * c;
+}
+
+function formatDateTimePtBr(value?: string | null): string | undefined {
+  if (!value) return undefined;
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return undefined;
+  return parsed.toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+}
+
+function formatRecurrenceRulePtBr(value?: string | null): string | undefined {
+  if (!value) return undefined;
+  const normalized = value.trim();
+  if (!normalized) return undefined;
+
+  return normalized
+    .replaceAll("FREQ=WEEKLY", "Frequência: semanal")
+    .replaceAll("FREQ=DAILY", "Frequência: diária")
+    .replaceAll("FREQ=MONTHLY", "Frequência: mensal")
+    .replaceAll("FREQ=YEARLY", "Frequência: anual")
+    .replaceAll("INTERVAL=", "Intervalo: ")
+    .replaceAll("UNTIL=", "Até: ");
 }
 
 function parseContacts(value: unknown): PlaceContact[] {
@@ -116,6 +161,21 @@ function parseOpeningHours(value: unknown): Place["openingHours"] | undefined {
   };
 }
 
+function parseEventContactsFromOrganizer(organizer: Record<string, unknown> | null | undefined): PlaceContact[] {
+  if (!organizer) return [];
+
+  const contacts: PlaceContact[] = [];
+  const email = toNonEmptyString(organizer.email ?? organizer.mail);
+  const website = toNonEmptyString(organizer.website ?? organizer.site ?? organizer.url);
+  const phone = toNonEmptyString(organizer.phone ?? organizer.telefone ?? organizer.whatsapp);
+
+  if (email) contacts.push({ type: "email", value: email, label: "E-mail do organizador", isPrimary: false });
+  if (website) contacts.push({ type: "website", value: website, label: "Site do evento", isPrimary: contacts.length === 0 });
+  if (phone) contacts.push({ type: "phone", value: phone, label: "Telefone do organizador", isPrimary: contacts.length === 0 });
+
+  return contacts;
+}
+
 function mapBackendPoiToPlace(
   item: BackendPoiDTO,
   index: number,
@@ -182,9 +242,7 @@ function mapBackendPoiToPlace(
 
   const elementType = (record.element_type as string | undefined) ?? "";
   const placeType: Place["type"] =
-    elementType === "situated_event"
-      ? "tour"
-      : elementType === "public_service" || categoryCode === "public_service"
+    elementType === "public_service" || categoryCode === "public_service"
         ? "service"
         : "place";
 
@@ -207,7 +265,13 @@ function mapBackendPoiToPlace(
       getCategoryCodeLabel(categoryCode) ??
       (record.categoria as string | undefined) ??
       (record.category as string | undefined),
-    categoryKey: mapCategoryCodeToCategoryKey(categoryCode),
+    categoryKey: mapDbClassificationToCategoryKey({
+      categoryCode,
+      elementType: elementType || undefined,
+      poiMacroType:
+        (record.poi_macro_type as string | undefined) ??
+        (record.poiMacroType as string | undefined),
+    }),
     description:
       (record.description as string | undefined) ??
       (record.descricao as string | undefined),
@@ -256,15 +320,112 @@ function mapBackendPoiToPlace(
   };
 }
 
-async function fetchFromApi(lat: number, lng: number): Promise<Place[]> {
-  const items = await locativeService.getNearElements(lat, lng, {
-    raio_metros: 3000,
-    limite: 100,
-  });
+function mapAdminEventToPlace(item: AdminEventListItemDTO, index: number, lat: number, lng: number): Place {
+  const eventLat = typeof item.latitude === "number" ? item.latitude : 0;
+  const eventLng = typeof item.longitude === "number" ? item.longitude : 0;
+  const eventDistanceMeters = computeDistanceMeters(lat, lng, eventLat, eventLng);
 
-  return items
+  const startsAt = formatDateTimePtBr(item.start_datetime);
+  const endsAt = formatDateTimePtBr(item.end_datetime);
+  const recurrenceText = formatRecurrenceRulePtBr(item.recurrence_rule);
+  const organizer = item.organizer_json ?? null;
+  const ticketing = item.ticketing_json ?? null;
+  const contacts = parseEventContactsFromOrganizer(organizer);
+  const ticketUrl = toNonEmptyString(
+    (ticketing as Record<string, unknown> | null | undefined)?.url
+  );
+
+  const organizerItems =
+    organizer && typeof organizer === "object"
+      ? Object.entries(organizer)
+          .map(([key, value]) => {
+            const textValue =
+              typeof value === "string" || typeof value === "number" || typeof value === "boolean"
+                ? String(value)
+                : null;
+            if (!textValue) return null;
+            return `${key}: ${textValue}`;
+          })
+          .filter((entry): entry is string => Boolean(entry))
+      : [];
+
+  const ticketItems =
+    ticketing && typeof ticketing === "object"
+      ? Object.entries(ticketing)
+          .map(([key, value]) => {
+            const textValue =
+              typeof value === "string" || typeof value === "number" || typeof value === "boolean"
+                ? String(value)
+                : null;
+            if (!textValue) return null;
+            return `${key}: ${textValue}`;
+          })
+          .filter((entry): entry is string => Boolean(entry))
+      : [];
+
+  return {
+    id: item.id ?? index + 1,
+    type: "place",
+    title: item.name ?? `Evento ${item.id ?? index + 1}`,
+    subtitle: item.kind ?? "Eventos",
+    categoryKey: "event",
+    description: item.description ?? undefined,
+    images: [item.image_url?.trim() ?? ""],
+    distance: formatDistanceFromMeters(eventDistanceMeters),
+    coordinates: {
+      lat: eventLat,
+      lng: eventLng,
+    },
+    address: item.address_street
+      ? {
+          street: item.address_street,
+          number: item.address_number ?? "",
+          neighborhood: item.address_neighborhood ?? "",
+          city: item.address_city ?? "",
+          state: item.address_state ?? "",
+          zip: item.address_postal_code ?? undefined,
+        }
+      : undefined,
+    contact: {
+      website: ticketUrl,
+      email: toNonEmptyString((organizer as Record<string, unknown> | null | undefined)?.email),
+    },
+    contacts,
+    keywords: item.keywords ?? [],
+    badges: [{ label: "Evento", variant: "secondary" }],
+    quickActions: ticketUrl ? [{ type: "website", label: "Ingressos", value: ticketUrl }] : undefined,
+    eventInfo: {
+      startsAt,
+      endsAt,
+      recurrence: recurrenceText,
+      capacity: typeof item.capacity === "number" ? item.capacity : undefined,
+      organizerItems,
+      ticketItems,
+    },
+  };
+}
+
+async function fetchFromApi(lat: number, lng: number): Promise<Place[]> {
+  const [nearbyResponse, eventsResponse] = await Promise.all([
+    locativeService.getNearElements(lat, lng, {
+      raio_metros: 3000,
+      limite: 100,
+    }),
+    locativeService.listAdminEvents().catch(() => [] as AdminEventListItemDTO[]),
+  ]);
+
+  const nearbyPlaces = nearbyResponse
     .map((item, index) => mapBackendPoiToPlace(item, index))
     .filter((place): place is Place => Boolean(place));
+
+  const eventPlaces = eventsResponse.map((item, index) => mapAdminEventToPlace(item, index, lat, lng));
+  const merged = [...nearbyPlaces, ...eventPlaces];
+  const deduped = new Map<number, Place>();
+  for (const place of merged) {
+    deduped.set(place.id, place);
+  }
+
+  return Array.from(deduped.values());
 }
 
 class PlaceService {
@@ -273,11 +434,25 @@ class PlaceService {
   }
 
   async getById(id: number, lat: number, lng: number): Promise<Place | undefined> {
-    const detail = await locativeService.getPoiDetail(id, {
-      latitude: lat,
-      longitude: lng,
-    });
-    const fromDetail = mapBackendPoiToPlace(detail, 0, id);
+    let fromDetail: Place | null = null;
+    try {
+      const detail = await locativeService.getPoiDetail(id, {
+        latitude: lat,
+        longitude: lng,
+      });
+      fromDetail = mapBackendPoiToPlace(detail, 0, id);
+    } catch {
+      fromDetail = null;
+    }
+
+    if (!fromDetail) {
+      try {
+        const eventDetail = await locativeService.getAdminEvent(id);
+        fromDetail = mapAdminEventToPlace(eventDetail, 0, lat, lng);
+      } catch {
+        fromDetail = null;
+      }
+    }
 
     const list = await fetchFromApi(lat, lng);
     const fromList = list.find((p) => p.id === id);

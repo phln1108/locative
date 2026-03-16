@@ -6,6 +6,7 @@ import PlaceCard from "@/components/ui/place-card";
 import { PlaceCardSkeleton } from "@/components/ui/card-skeletons";
 import { placeService } from "@/services/place-service";
 import type { Place } from "@/models/models";
+import { getCategoryByKey } from "@/data/categories";
 
 const SearchPage = () => {
   const navigate = useNavigate();
@@ -102,7 +103,25 @@ const SearchPage = () => {
           : places.map((place) => (
               <PlaceCard
                 key={place.id}
-                {...place}
+                id={place.id}
+                title={place.title}
+                image={place.images?.[0] ?? ""}
+                category={place.subtitle}
+                categoryEmoji={getCategoryByKey(place.categoryKey)?.emoji}
+                categoryColor={getCategoryByKey(place.categoryKey)?.color}
+                rating={place.rating}
+                reviews={place.reviews}
+                distance={place.distance}
+                priceLevel={place.priceLevel}
+                address={
+                  place.address
+                    ? `${place.address.street}, ${place.address.number} - ${place.address.neighborhood}, ${place.address.city} - ${place.address.state}`
+                    : undefined
+                }
+                phone={place.contact?.phone}
+                website={place.contact?.website}
+                lat={place.coordinates?.lat}
+                lng={place.coordinates?.lng}
                 onClick={() => navigate(`/bio/${place.id}`)}
               />
             ))}
@@ -112,3 +131,4 @@ const SearchPage = () => {
 };
 
 export default SearchPage;
+

@@ -3,6 +3,7 @@ import {
   Briefcase,
   Bus,
   Car,
+  Calendar,
   GraduationCap,
   HandHelping,
   HeartPulse,
@@ -96,6 +97,13 @@ export const categoryRegistry: Category[] = [
     icon: Landmark,
   },
   {
+    key: "event",
+    label: "Eventos",
+    emoji: "🎉",
+    color: "rgba(251,191,36,0.15)",
+    icon: Calendar,
+  },
+  {
     key: "education",
     label: "Educação",
     emoji: "📚",
@@ -104,7 +112,7 @@ export const categoryRegistry: Category[] = [
   },
   {
     key: "culture",
-    label: "Cultura",
+    label: "Cultura e patrimônio",
     emoji: "🎨",
     color: "rgba(168,85,247,0.15)",
     icon: Palette,
@@ -135,3 +143,4 @@ export const categoryRegistry: Category[] = [
 export function getCategoryByKey(key: string) {
   return categoryRegistry.find((category) => category.key === key);
 }
+
