@@ -5,9 +5,13 @@ export type ElementType =
   | "infrastructure"
   | "public_service"
   | "situated_event"
-  | "symbolic_heritage"
+  | "symbolic_historic"
   | "commercial_poi"
   | "public_transport"
+  | "nature"
+  | "dynamic_mobile"
+  // legados mantidos para compatibilidade de leitura
+  | "symbolic_heritage"
   | "natural_element"
   | "mobile_element"
   | "religious_spiritual";

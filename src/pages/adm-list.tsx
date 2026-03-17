@@ -35,7 +35,12 @@ export default function AdminPoiListPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const initialType = searchParams.get("type") === "event" ? "event" : "poi";
   const [listType, setListType] = useState<"poi" | "event">(initialType);
-  const currentItems = listType === "event" ? eventItems : items;
+  const isPendingCategory = (categoryCode?: string | null) =>
+    ["uncategorized", "sem_categoria"].includes((categoryCode ?? "").trim().toLowerCase());
+  const sortedPoiItems = [...items].sort(
+    (a, b) => Number(isPendingCategory(b.category_code)) - Number(isPendingCategory(a.category_code))
+  );
+  const currentItems = listType === "event" ? eventItems : sortedPoiItems;
 
   useEffect(() => {
     const load = async () => {
@@ -217,7 +222,7 @@ export default function AdminPoiListPage() {
               </div>
             </Card>
             ))
-          : items.map((item) => (
+          : sortedPoiItems.map((item) => (
             <Card key={item.id} className="overflow-hidden py-0">
               <div className="flex flex-col sm:flex-row">
                 <div className="relative h-52 w-full sm:h-auto sm:w-52">
@@ -227,8 +232,11 @@ export default function AdminPoiListPage() {
                     className="h-full w-full object-cover"
                     fallbackClassName="h-full w-full"
                   />
-                  <div className="absolute left-3 top-3 flex gap-2">
+                  <div className="absolute left-3 top-3 flex max-w-[calc(100%-1.5rem)] flex-col items-start gap-1">
                     <Badge variant="secondary">{getCategoryCodeLabel(item.category_code)}</Badge>
+                    {isPendingCategory(item.category_code) && (
+                      <Badge variant="destructive">Recategorizar</Badge>
+                    )}
                     <Badge variant={item.status === "active" ? "default" : "outline"}>
                       {item.status}
                     </Badge>

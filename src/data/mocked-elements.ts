@@ -105,9 +105,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "food", is_primary: false },
+      { code: "private_food_beverage", is_primary: false },
     ],
-    poi_macro_type: "food",
+    poi_macro_type: "private_food_beverage",
     price_level: 2,
     rating: { value: 4.6, count: 124 },
     contact: {
@@ -132,9 +132,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "services", is_primary: false },
+      { code: "private_personal_services", is_primary: false },
     ],
-    poi_macro_type: "services",
+    poi_macro_type: "private_personal_services",
     price_level: 2,
     rating: { value: 4.3, count: 88 },
     contact: {
@@ -160,9 +160,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "services", is_primary: false },
+      { code: "private_personal_services", is_primary: false },
     ],
-    poi_macro_type: "services",
+    poi_macro_type: "private_personal_services",
     price_level: 2,
     rating: { value: 4.2, count: 76 },
     contact: {
@@ -188,9 +188,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "retail", is_primary: false },
+      { code: "private_retail", is_primary: false },
     ],
-    poi_macro_type: "retail",
+    poi_macro_type: "private_retail",
     price_level: 2,
     rating: { value: 4.1, count: 42 },
     contact: {
@@ -215,9 +215,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "retail", is_primary: false },
+      { code: "private_retail", is_primary: false },
     ],
-    poi_macro_type: "retail",
+    poi_macro_type: "private_retail",
     price_level: 3,
     rating: { value: 4.5, count: 356 },
     contact: {
@@ -242,9 +242,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "automotive", is_primary: false },
+      { code: "private_automotive_mobility", is_primary: false },
     ],
-    poi_macro_type: "automotive",
+    poi_macro_type: "private_automotive_mobility",
     price_level: 1,
     rating: { value: 4.0, count: 51 },
     contact: {
@@ -270,9 +270,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "automotive", is_primary: false },
+      { code: "private_automotive_mobility", is_primary: false },
     ],
-    poi_macro_type: "automotive",
+    poi_macro_type: "private_automotive_mobility",
     price_level: 2,
     rating: { value: 4.1, count: 67 },
     contact: {
@@ -297,9 +297,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "food", is_primary: false },
+      { code: "private_food_beverage", is_primary: false },
     ],
-    poi_macro_type: "food",
+    poi_macro_type: "private_food_beverage",
     price_level: 3,
     rating: { value: 4.7, count: 412 },
     contact: {
@@ -325,9 +325,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "retail", is_primary: false },
+      { code: "private_retail", is_primary: false },
     ],
-    poi_macro_type: "retail",
+    poi_macro_type: "private_retail",
     price_level: 2,
     rating: { value: 4.2, count: 49 },
     contact: {
@@ -352,9 +352,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "automotive", is_primary: false },
+      { code: "private_automotive_mobility", is_primary: false },
     ],
-    poi_macro_type: "automotive",
+    poi_macro_type: "private_automotive_mobility",
     price_level: 2,
     rating: { value: 4.4, count: 33 },
     contact: {
@@ -397,7 +397,7 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "public_service", is_primary: true },
-      { code: "education", is_primary: false },
+      { code: "private_education", is_primary: false },
     ],
     public_service_domain: "education",
     contact: {
@@ -441,9 +441,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "food", is_primary: false },
+      { code: "private_food_beverage", is_primary: false },
     ],
-    poi_macro_type: "food",
+    poi_macro_type: "private_food_beverage",
     price_level: 2,
     rating: { value: 4.5, count: 131 },
     contact: {
@@ -468,9 +468,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "services", is_primary: false },
+      { code: "private_personal_services", is_primary: false },
     ],
-    poi_macro_type: "services",
+    poi_macro_type: "private_personal_services",
     price_level: 2,
     rating: { value: 4.6, count: 54 },
     contact: {
@@ -494,9 +494,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "retail", is_primary: false },
+      { code: "private_retail", is_primary: false },
     ],
-    poi_macro_type: "retail",
+    poi_macro_type: "private_retail",
     price_level: 2,
     rating: { value: 4.0, count: 39 },
     media: [
@@ -517,9 +517,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "retail", is_primary: false },
+      { code: "private_retail", is_primary: false },
     ],
-    poi_macro_type: "retail",
+    poi_macro_type: "private_retail",
     price_level: 1,
     rating: { value: 4.1, count: 28 },
     media: [

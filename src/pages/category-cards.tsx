@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 export default function CategoryCardsPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const categoryKey = searchParams.get("category") ?? "food";
+  const categoryKey = searchParams.get("category") ?? "public_place";
   const { places, loading } = usePlaces();
 
   const vm = useMemo(
