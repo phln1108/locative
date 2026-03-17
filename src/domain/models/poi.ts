@@ -1,15 +1,21 @@
 import type { LocativeElement } from "./locative-element";
 
 export type PoiMacroType =
-  | "food_beverage"
-  | "nightlife"
+  | "food"
   | "retail"
+  | "shopping_center"
+  | "health"
+  | "transport"
+  | "public_service"
+  | "public_place"
+  | "infrastructure"
   | "entertainment"
-  | "tourism_hospitality"
+  | "services"
+  | "tourism"
+  | "education"
+  | "culture"
+  | "nature"
   | "finance"
-  | "personal_services"
-  | "professional_services"
-  | "private_education"
   | "automotive";
 
 export interface CommercialPOI extends LocativeElement {

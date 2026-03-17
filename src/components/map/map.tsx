@@ -141,8 +141,11 @@ function mapBackendPoiToMapPlace(poi: BackendPoiDTO, index: number): MapPlace | 
   const distanceMeters = toNumber(record.distancia_metros) ?? undefined;
 
   const categoryCode =
+    (record.category_code as string | undefined) ??
+    (record.poi_macro_type as string | undefined) ??
     (record.categoria as string | undefined) ??
-    (record.category as string | undefined);
+    (record.category as string | undefined) ??
+    (record.element_type as string | undefined);
 
   return {
     id,
@@ -262,7 +265,7 @@ export default function Map() {
 
             <Circle
               center={userPosition}
-              radius={200}
+              radius={1000}
               pathOptions={{
                 color: "#2563eb",
                 fillColor: "#2563eb",

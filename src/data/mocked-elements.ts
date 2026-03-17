@@ -105,9 +105,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "food_beverage", is_primary: false },
+      { code: "food", is_primary: false },
     ],
-    poi_macro_type: "food_beverage",
+    poi_macro_type: "food",
     price_level: 2,
     rating: { value: 4.6, count: 124 },
     contact: {
@@ -132,9 +132,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "personal_services", is_primary: false },
+      { code: "services", is_primary: false },
     ],
-    poi_macro_type: "personal_services",
+    poi_macro_type: "services",
     price_level: 2,
     rating: { value: 4.3, count: 88 },
     contact: {
@@ -160,9 +160,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "personal_services", is_primary: false },
+      { code: "services", is_primary: false },
     ],
-    poi_macro_type: "personal_services",
+    poi_macro_type: "services",
     price_level: 2,
     rating: { value: 4.2, count: 76 },
     contact: {
@@ -297,9 +297,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "food_beverage", is_primary: false },
+      { code: "food", is_primary: false },
     ],
-    poi_macro_type: "food_beverage",
+    poi_macro_type: "food",
     price_level: 3,
     rating: { value: 4.7, count: 412 },
     contact: {
@@ -441,9 +441,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "food_beverage", is_primary: false },
+      { code: "food", is_primary: false },
     ],
-    poi_macro_type: "food_beverage",
+    poi_macro_type: "food",
     price_level: 2,
     rating: { value: 4.5, count: 131 },
     contact: {
@@ -468,9 +468,9 @@ export const mockedElements: LocativeUnion[] = [
     status: "active",
     categories: [
       { code: "commercial_poi", is_primary: true },
-      { code: "personal_services", is_primary: false },
+      { code: "services", is_primary: false },
     ],
-    poi_macro_type: "personal_services",
+    poi_macro_type: "services",
     price_level: 2,
     rating: { value: 4.6, count: 54 },
     contact: {
